@@ -42,6 +42,7 @@ const Navigation = () => {
 
   const navLinks = [
     { href: '/students', label: 'For Students' },
+    { href: '/universities', label: 'For Universities' },
     { href: '/companies', label: 'For Companies' },
     { href: '/how-it-works', label: 'How It Works' },
     { href: '/about', label: 'About' },
