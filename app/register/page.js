@@ -96,32 +96,46 @@ function RegisterContent() {
           </CardHeader>
           <CardContent>
             {/* Role Selection */}
-            <div className="grid grid-cols-2 gap-4 mb-6">
+            <div className="grid grid-cols-3 gap-3 mb-6">
               <button
                 type="button"
                 onClick={() => setSelectedRole('student')}
-                className={`p-4 rounded-xl border-2 transition-all ${
+                className={`p-3 rounded-xl border-2 transition-all ${
                   selectedRole === 'student'
                     ? 'border-[#0D4ABC] bg-blue-50'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
-                <GraduationCap className={`w-8 h-8 mx-auto mb-2 ${selectedRole === 'student' ? 'text-[#0D4ABC]' : 'text-gray-400'}`} />
-                <div className={`font-medium ${selectedRole === 'student' ? 'text-[#0D4ABC]' : 'text-gray-600'}`}>
+                <GraduationCap className={`w-7 h-7 mx-auto mb-1 ${selectedRole === 'student' ? 'text-[#0D4ABC]' : 'text-gray-400'}`} />
+                <div className={`text-sm font-medium ${selectedRole === 'student' ? 'text-[#0D4ABC]' : 'text-gray-600'}`}>
                   Student
                 </div>
               </button>
               <button
                 type="button"
+                onClick={() => setSelectedRole('university')}
+                className={`p-3 rounded-xl border-2 transition-all ${
+                  selectedRole === 'university'
+                    ? 'border-[#0D4ABC] bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
+                }`}
+              >
+                <Building className={`w-7 h-7 mx-auto mb-1 ${selectedRole === 'university' ? 'text-[#0D4ABC]' : 'text-gray-400'}`} />
+                <div className={`text-sm font-medium ${selectedRole === 'university' ? 'text-[#0D4ABC]' : 'text-gray-600'}`}>
+                  University
+                </div>
+              </button>
+              <button
+                type="button"
                 onClick={() => setSelectedRole('company')}
-                className={`p-4 rounded-xl border-2 transition-all ${
+                className={`p-3 rounded-xl border-2 transition-all ${
                   selectedRole === 'company'
                     ? 'border-[#0D4ABC] bg-blue-50'
                     : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
-                <Building2 className={`w-8 h-8 mx-auto mb-2 ${selectedRole === 'company' ? 'text-[#0D4ABC]' : 'text-gray-400'}`} />
-                <div className={`font-medium ${selectedRole === 'company' ? 'text-[#0D4ABC]' : 'text-gray-600'}`}>
+                <Building2 className={`w-7 h-7 mx-auto mb-1 ${selectedRole === 'company' ? 'text-[#0D4ABC]' : 'text-gray-400'}`} />
+                <div className={`text-sm font-medium ${selectedRole === 'company' ? 'text-[#0D4ABC]' : 'text-gray-600'}`}>
                   Company
                 </div>
               </button>
