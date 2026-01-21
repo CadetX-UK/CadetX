@@ -228,15 +228,24 @@ def test_user_login():
     
     # Test invalid credentials
     invalid_login = {"email": TEST_STUDENT_DATA["email"], "password": "wrongpassword"}
-    response, error = make_request('POST', '/auth/login', invalid_login, expected_status=401)
+    response, error = make_request('POST', '/auth/login', invalid_login)
     
-    if error and "Expected status 401" not in error:
+    if error:
         log_test("User Login API - Invalid Credentials", "FAIL", error)
         return False
     elif response and response.status_code == 401:
-        log_test("User Login API - Invalid Credentials", "PASS", "Invalid credentials handled correctly")
+        try:
+            data = response.json()
+            if 'error' in data:
+                log_test("User Login API - Invalid Credentials", "PASS", f"Invalid credentials handled correctly: {data['error']}")
+            else:
+                log_test("User Login API - Invalid Credentials", "FAIL", "No error message in response")
+                return False
+        except:
+            log_test("User Login API - Invalid Credentials", "FAIL", "Invalid JSON response")
+            return False
     else:
-        log_test("User Login API - Invalid Credentials", "FAIL", "Invalid credentials should have failed")
+        log_test("User Login API - Invalid Credentials", "FAIL", f"Expected 401, got {response.status_code}")
         return False
     
     return True
