@@ -900,6 +900,455 @@ async function handleRoute(request, { params }) {
     }
 
     // =====================
+    // UNIVERSITY ROUTES
+    // =====================
+
+    // University onboarding
+    if (route === '/university/onboarding' && method === 'POST') {
+      const decoded = verifyToken(request)
+      if (!decoded || decoded.role !== 'university') {
+        return handleCORS(NextResponse.json(
+          { error: 'Unauthorized' },
+          { status: 401 }
+        ))
+      }
+
+      const body = await request.json()
+      const { 
+        institution_name, institution_type, accreditation, 
+        location, website, phone, contact_person, 
+        student_count, programs_offered, partnership_type 
+      } = body
+
+      // Create or update university profile
+      const existingProfile = await db.collection('universities').findOne({ user_id: decoded.id })
+      
+      if (existingProfile) {
+        await db.collection('universities').updateOne(
+          { user_id: decoded.id },
+          {
+            $set: {
+              institution_name,
+              institution_type,
+              accreditation,
+              location,
+              website,
+              phone,
+              contact_person,
+              student_count,
+              programs_offered,
+              partnership_type,
+              updated_at: new Date()
+            }
+          }
+        )
+      } else {
+        await db.collection('universities').insertOne({
+          id: uuidv4(),
+          user_id: decoded.id,
+          institution_name,
+          institution_type,
+          accreditation,
+          location,
+          website,
+          phone,
+          contact_person,
+          student_count,
+          programs_offered,
+          partnership_type,
+          partnership_status: 'pending',
+          enrolled_students: [],
+          created_at: new Date(),
+          updated_at: new Date()
+        })
+      }
+
+      // Update user onboarding status
+      await db.collection('users').updateOne(
+        { id: decoded.id },
+        {
+          $set: {
+            onboarding_completed: true,
+            updated_at: new Date()
+          }
+        }
+      )
+
+      return handleCORS(NextResponse.json({ success: true, message: 'University profile created' }))
+    }
+
+    // Get university dashboard
+    if (route === '/university/dashboard' && method === 'GET') {
+      const decoded = verifyToken(request)
+      if (!decoded || decoded.role !== 'university') {
+        return handleCORS(NextResponse.json(
+          { error: 'Unauthorized' },
+          { status: 401 }
+        ))
+      }
+
+      const user = await db.collection('users').findOne({ id: decoded.id })
+      const university = await db.collection('universities').findOne({ user_id: decoded.id })
+
+      if (!university) {
+        return handleCORS(NextResponse.json({
+          user: { ...user, password: undefined },
+          university: null,
+          stats: null,
+          students: []
+        }))
+      }
+
+      // Get enrolled students with their progress
+      const enrolledStudentIds = university.enrolled_students || []
+      const students = await Promise.all(
+        enrolledStudentIds.map(async (studentUserId) => {
+          const studentUser = await db.collection('users').findOne({ id: studentUserId })
+          const studentProfile = await db.collection('students').findOne({ user_id: studentUserId })
+          const quizzes = await db.collection('quizzes').find({ student_id: studentUserId }).toArray()
+          const avgScore = quizzes.length > 0 
+            ? Math.round(quizzes.reduce((sum, q) => sum + q.score, 0) / quizzes.length)
+            : null
+
+          return {
+            id: studentUserId,
+            name: studentUser?.name,
+            email: studentUser?.email,
+            status: studentProfile?.status || 'pending',
+            current_week: studentProfile?.current_week || 0,
+            aptitude_score: studentProfile?.aptitude_score,
+            quiz_avg_score: avgScore,
+            is_vetted: studentProfile?.is_vetted || false,
+            payment_verified: studentProfile?.payment_verified || false,
+            enrolled_at: studentProfile?.created_at
+          }
+        })
+      )
+
+      // Calculate stats
+      const totalStudents = students.length
+      const activeStudents = students.filter(s => s.payment_verified).length
+      const completedStudents = students.filter(s => s.current_week >= 4).length
+      const placedStudents = students.filter(s => s.is_vetted).length
+      const avgAptitudeScore = students.filter(s => s.aptitude_score).length > 0
+        ? Math.round(students.filter(s => s.aptitude_score).reduce((sum, s) => sum + s.aptitude_score, 0) / students.filter(s => s.aptitude_score).length)
+        : 0
+
+      const stats = {
+        total_students: totalStudents,
+        active_students: activeStudents,
+        completed_students: completedStudents,
+        placed_students: placedStudents,
+        completion_rate: totalStudents > 0 ? Math.round((completedStudents / totalStudents) * 100) : 0,
+        placement_rate: completedStudents > 0 ? Math.round((placedStudents / completedStudents) * 100) : 0,
+        avg_aptitude_score: avgAptitudeScore
+      }
+
+      const { password: _, ...userWithoutPassword } = user || {}
+
+      return handleCORS(NextResponse.json({
+        user: userWithoutPassword,
+        university,
+        stats,
+        students
+      }))
+    }
+
+    // Add student to university (bulk or single)
+    if (route === '/university/students/add' && method === 'POST') {
+      const decoded = verifyToken(request)
+      if (!decoded || decoded.role !== 'university') {
+        return handleCORS(NextResponse.json(
+          { error: 'Unauthorized' },
+          { status: 401 }
+        ))
+      }
+
+      const body = await request.json()
+      const { emails } = body // Array of student emails
+
+      if (!emails || !Array.isArray(emails) || emails.length === 0) {
+        return handleCORS(NextResponse.json(
+          { error: 'At least one email is required' },
+          { status: 400 }
+        ))
+      }
+
+      const university = await db.collection('universities').findOne({ user_id: decoded.id })
+      if (!university) {
+        return handleCORS(NextResponse.json(
+          { error: 'University profile not found' },
+          { status: 404 }
+        ))
+      }
+
+      const results = { added: [], not_found: [], already_enrolled: [] }
+
+      for (const email of emails) {
+        const studentUser = await db.collection('users').findOne({ 
+          email: email.toLowerCase(), 
+          role: 'student' 
+        })
+
+        if (!studentUser) {
+          results.not_found.push(email)
+          continue
+        }
+
+        // Check if already enrolled
+        if (university.enrolled_students?.includes(studentUser.id)) {
+          results.already_enrolled.push(email)
+          continue
+        }
+
+        // Add student to university
+        await db.collection('universities').updateOne(
+          { user_id: decoded.id },
+          { 
+            $addToSet: { enrolled_students: studentUser.id },
+            $set: { updated_at: new Date() }
+          }
+        )
+
+        // Update student with university reference
+        await db.collection('students').updateOne(
+          { user_id: studentUser.id },
+          { 
+            $set: { 
+              university_id: university.id,
+              updated_at: new Date() 
+            }
+          }
+        )
+
+        results.added.push(email)
+      }
+
+      return handleCORS(NextResponse.json({ 
+        success: true, 
+        results,
+        message: `Added ${results.added.length} students`
+      }))
+    }
+
+    // Remove student from university
+    if (route === '/university/students/remove' && method === 'POST') {
+      const decoded = verifyToken(request)
+      if (!decoded || decoded.role !== 'university') {
+        return handleCORS(NextResponse.json(
+          { error: 'Unauthorized' },
+          { status: 401 }
+        ))
+      }
+
+      const body = await request.json()
+      const { student_id } = body
+
+      await db.collection('universities').updateOne(
+        { user_id: decoded.id },
+        { 
+          $pull: { enrolled_students: student_id },
+          $set: { updated_at: new Date() }
+        }
+      )
+
+      await db.collection('students').updateOne(
+        { user_id: student_id },
+        { 
+          $unset: { university_id: '' },
+          $set: { updated_at: new Date() }
+        }
+      )
+
+      return handleCORS(NextResponse.json({ success: true }))
+    }
+
+    // Get university analytics
+    if (route === '/university/analytics' && method === 'GET') {
+      const decoded = verifyToken(request)
+      if (!decoded || decoded.role !== 'university') {
+        return handleCORS(NextResponse.json(
+          { error: 'Unauthorized' },
+          { status: 401 }
+        ))
+      }
+
+      const university = await db.collection('universities').findOne({ user_id: decoded.id })
+      if (!university) {
+        return handleCORS(NextResponse.json({ analytics: null }))
+      }
+
+      const enrolledStudentIds = university.enrolled_students || []
+
+      // Get weekly progress distribution
+      const weeklyProgress = { week1: 0, week2: 0, week3: 0, week4: 0, completed: 0 }
+      const statusDistribution = { onboarding: 0, enrolled: 0, talent_pool: 0 }
+      const scoreRanges = { excellent: 0, good: 0, average: 0, needsWork: 0 }
+
+      for (const studentId of enrolledStudentIds) {
+        const student = await db.collection('students').findOne({ user_id: studentId })
+        if (!student) continue
+
+        // Weekly progress
+        const week = student.current_week || 0
+        if (week >= 4) weeklyProgress.completed++
+        else if (week === 3) weeklyProgress.week4++
+        else if (week === 2) weeklyProgress.week3++
+        else if (week === 1) weeklyProgress.week2++
+        else weeklyProgress.week1++
+
+        // Status distribution
+        if (student.is_vetted) statusDistribution.talent_pool++
+        else if (student.payment_verified) statusDistribution.enrolled++
+        else statusDistribution.onboarding++
+
+        // Score ranges
+        const quizzes = await db.collection('quizzes').find({ student_id: studentId }).toArray()
+        if (quizzes.length > 0) {
+          const avgScore = Math.round(quizzes.reduce((sum, q) => sum + q.score, 0) / quizzes.length)
+          if (avgScore >= 90) scoreRanges.excellent++
+          else if (avgScore >= 75) scoreRanges.good++
+          else if (avgScore >= 60) scoreRanges.average++
+          else scoreRanges.needsWork++
+        }
+      }
+
+      return handleCORS(NextResponse.json({
+        analytics: {
+          weeklyProgress,
+          statusDistribution,
+          scoreRanges,
+          totalEnrolled: enrolledStudentIds.length
+        }
+      }))
+    }
+
+    // Invite students (send invitation codes)
+    if (route === '/university/invite' && method === 'POST') {
+      const decoded = verifyToken(request)
+      if (!decoded || decoded.role !== 'university') {
+        return handleCORS(NextResponse.json(
+          { error: 'Unauthorized' },
+          { status: 401 }
+        ))
+      }
+
+      const body = await request.json()
+      const { count = 10 } = body
+
+      const university = await db.collection('universities').findOne({ user_id: decoded.id })
+      if (!university) {
+        return handleCORS(NextResponse.json(
+          { error: 'University profile not found' },
+          { status: 404 }
+        ))
+      }
+
+      // Generate invitation codes
+      const inviteCodes = []
+      for (let i = 0; i < count; i++) {
+        const code = `${university.institution_name?.substring(0, 3).toUpperCase() || 'UNI'}-${uuidv4().substring(0, 8).toUpperCase()}`
+        inviteCodes.push({
+          id: uuidv4(),
+          code,
+          university_id: university.id,
+          used: false,
+          created_at: new Date(),
+          expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+        })
+      }
+
+      await db.collection('invite_codes').insertMany(inviteCodes)
+
+      return handleCORS(NextResponse.json({ 
+        success: true, 
+        codes: inviteCodes.map(c => c.code)
+      }))
+    }
+
+    // Validate invite code (public route for students)
+    if (route === '/university/validate-code' && method === 'POST') {
+      const body = await request.json()
+      const { code } = body
+
+      const inviteCode = await db.collection('invite_codes').findOne({ 
+        code: code.toUpperCase(),
+        used: false,
+        expires_at: { $gt: new Date() }
+      })
+
+      if (!inviteCode) {
+        return handleCORS(NextResponse.json(
+          { valid: false, error: 'Invalid or expired code' },
+          { status: 400 }
+        ))
+      }
+
+      const university = await db.collection('universities').findOne({ id: inviteCode.university_id })
+
+      return handleCORS(NextResponse.json({ 
+        valid: true, 
+        university_name: university?.institution_name,
+        university_id: university?.id
+      }))
+    }
+
+    // Use invite code (after student registration)
+    if (route === '/university/use-code' && method === 'POST') {
+      const decoded = verifyToken(request)
+      if (!decoded || decoded.role !== 'student') {
+        return handleCORS(NextResponse.json(
+          { error: 'Unauthorized' },
+          { status: 401 }
+        ))
+      }
+
+      const body = await request.json()
+      const { code } = body
+
+      const inviteCode = await db.collection('invite_codes').findOne({ 
+        code: code.toUpperCase(),
+        used: false,
+        expires_at: { $gt: new Date() }
+      })
+
+      if (!inviteCode) {
+        return handleCORS(NextResponse.json(
+          { error: 'Invalid or expired code' },
+          { status: 400 }
+        ))
+      }
+
+      // Mark code as used
+      await db.collection('invite_codes').updateOne(
+        { id: inviteCode.id },
+        { $set: { used: true, used_by: decoded.id, used_at: new Date() } }
+      )
+
+      // Add student to university
+      await db.collection('universities').updateOne(
+        { id: inviteCode.university_id },
+        { 
+          $addToSet: { enrolled_students: decoded.id },
+          $set: { updated_at: new Date() }
+        }
+      )
+
+      // Update student with university reference
+      await db.collection('students').updateOne(
+        { user_id: decoded.id },
+        { 
+          $set: { 
+            university_id: inviteCode.university_id,
+            updated_at: new Date() 
+          }
+        }
+      )
+
+      return handleCORS(NextResponse.json({ success: true }))
+    }
+
+    // =====================
     // SEED DATA (for development)
     // =====================
 
