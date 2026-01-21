@@ -162,15 +162,24 @@ def test_user_registration():
     
     # Test validation errors
     invalid_data = {"email": "invalid-email", "password": "123", "name": ""}
-    response, error = make_request('POST', '/auth/register', invalid_data, expected_status=400)
+    response, error = make_request('POST', '/auth/register', invalid_data)
     
-    if error and "Expected status 400" not in error:
+    if error:
         log_test("User Registration API - Validation", "FAIL", error)
         return False
     elif response and response.status_code == 400:
-        log_test("User Registration API - Validation", "PASS", "Validation errors handled correctly")
+        try:
+            data = response.json()
+            if 'error' in data:
+                log_test("User Registration API - Validation", "PASS", f"Validation errors handled correctly: {data['error']}")
+            else:
+                log_test("User Registration API - Validation", "FAIL", "No error message in response")
+                return False
+        except:
+            log_test("User Registration API - Validation", "FAIL", "Invalid JSON response")
+            return False
     else:
-        log_test("User Registration API - Validation", "FAIL", "Validation should have failed")
+        log_test("User Registration API - Validation", "FAIL", f"Expected 400, got {response.status_code}")
         return False
     
     # Test duplicate email
