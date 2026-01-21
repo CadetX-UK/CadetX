@@ -176,6 +176,7 @@ def test_user_registration():
             data = response.json()
             if 'error' in data:
                 log_test("User Registration API - Validation", "PASS", f"Validation errors handled correctly: {data['error']}")
+                return True
             else:
                 log_test("User Registration API - Validation", "FAIL", "No error message in response")
                 return False
