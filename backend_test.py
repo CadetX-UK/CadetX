@@ -244,7 +244,6 @@ def test_user_login():
             data = response.json()
             if 'error' in data:
                 log_test("User Login API - Invalid Credentials", "PASS", f"Invalid credentials handled correctly: {data['error']}")
-                return True
             else:
                 log_test("User Login API - Invalid Credentials", "FAIL", "No error message in response")
                 return False
