@@ -145,9 +145,9 @@ async function handleRoute(request, { params }) {
         ))
       }
 
-      if (!['student', 'company'].includes(role)) {
+      if (!['student', 'company', 'university'].includes(role)) {
         return handleCORS(NextResponse.json(
-          { error: 'Role must be student or company' },
+          { error: 'Role must be student, company, or university' },
           { status: 400 }
         ))
       }
