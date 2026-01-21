@@ -168,7 +168,7 @@ def test_user_registration():
     invalid_data = {"email": "invalid-email", "password": "123", "name": ""}
     response, error = make_request('POST', '/auth/register', invalid_data)
     
-    print(f"DEBUG: Validation test - error: {error}, status: {response.status_code if response else 'None'}")
+    print(f"DEBUG: Validation test - error: {error}, response: {response}, status: {response.status_code if response else 'None'}")
     
     if error:
         log_test("User Registration API - Validation", "FAIL", error)
