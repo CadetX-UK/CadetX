@@ -168,26 +168,23 @@ def test_user_registration():
         log_test("User Registration API - Valid Company", "FAIL", "Invalid JSON response")
         return False
     
-    # Test validation errors
+    # Test validation errors - expect 400 status
     invalid_data = {"email": "invalid-email", "password": "123", "name": ""}
     response, error = make_request('POST', '/auth/register', invalid_data)
-    
-    print(f"DEBUG: Validation test - error: {error}")
-    if response:
-        print(f"DEBUG: Response status: {response.status_code}")
-        print(f"DEBUG: Response text: {response.text}")
-    else:
-        print("DEBUG: Response is None")
     
     if error:
         log_test("User Registration API - Validation", "FAIL", error)
         return False
-    elif response and response.status_code == 400:
+    
+    if not response:
+        log_test("User Registration API - Validation", "FAIL", "No response received")
+        return False
+        
+    if response.status_code == 400:
         try:
             data = response.json()
             if 'error' in data:
                 log_test("User Registration API - Validation", "PASS", f"Validation errors handled correctly: {data['error']}")
-                return True
             else:
                 log_test("User Registration API - Validation", "FAIL", "No error message in response")
                 return False
@@ -195,22 +192,25 @@ def test_user_registration():
             log_test("User Registration API - Validation", "FAIL", "Invalid JSON response")
             return False
     else:
-        status_code = response.status_code if response else "None"
-        log_test("User Registration API - Validation", "FAIL", f"Expected 400, got {status_code}")
+        log_test("User Registration API - Validation", "FAIL", f"Expected 400, got {response.status_code}")
         return False
     
-    # Test duplicate email
+    # Test duplicate email - expect 400 status
     response, error = make_request('POST', '/auth/register', TEST_STUDENT_DATA)
     
     if error:
         log_test("User Registration API - Duplicate Email", "FAIL", error)
         return False
-    elif response and response.status_code == 400:
+        
+    if not response:
+        log_test("User Registration API - Duplicate Email", "FAIL", "No response received")
+        return False
+        
+    if response.status_code == 400:
         try:
             data = response.json()
             if 'error' in data:
                 log_test("User Registration API - Duplicate Email", "PASS", f"Duplicate email handled correctly: {data['error']}")
-                return True
             else:
                 log_test("User Registration API - Duplicate Email", "FAIL", "No error message in response")
                 return False
