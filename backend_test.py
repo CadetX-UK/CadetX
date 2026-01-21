@@ -290,6 +290,7 @@ def test_admin_login():
             data = response.json()
             if 'error' in data:
                 log_test("Admin Login API - Invalid Credentials", "PASS", f"Invalid admin credentials handled correctly: {data['error']}")
+                return True
             else:
                 log_test("Admin Login API - Invalid Credentials", "FAIL", "No error message in response")
                 return False
