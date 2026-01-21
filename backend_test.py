@@ -487,28 +487,46 @@ def test_company_talent_api():
 def test_unauthorized_access():
     """Test unauthorized access to protected endpoints"""
     # Test without token
-    response, error = make_request('GET', '/admin/students', expected_status=401)
+    response, error = make_request('GET', '/admin/students')
     
-    if error and "Expected status 401" not in error:
+    if error:
         log_test("Authorization Test - No Token", "FAIL", error)
         return False
     elif response and response.status_code == 401:
-        log_test("Authorization Test - No Token", "PASS", "Unauthorized access blocked correctly")
+        try:
+            data = response.json()
+            if 'error' in data:
+                log_test("Authorization Test - No Token", "PASS", f"Unauthorized access blocked correctly: {data['error']}")
+            else:
+                log_test("Authorization Test - No Token", "FAIL", "No error message in response")
+                return False
+        except:
+            log_test("Authorization Test - No Token", "FAIL", "Invalid JSON response")
+            return False
     else:
-        log_test("Authorization Test - No Token", "FAIL", "Should have returned 401")
+        log_test("Authorization Test - No Token", "FAIL", f"Expected 401, got {response.status_code}")
         return False
     
     # Test with invalid token
     headers = {"Authorization": "Bearer invalid_token"}
-    response, error = make_request('GET', '/admin/students', headers=headers, expected_status=401)
+    response, error = make_request('GET', '/admin/students', headers=headers)
     
-    if error and "Expected status 401" not in error:
+    if error:
         log_test("Authorization Test - Invalid Token", "FAIL", error)
         return False
     elif response and response.status_code == 401:
-        log_test("Authorization Test - Invalid Token", "PASS", "Invalid token blocked correctly")
+        try:
+            data = response.json()
+            if 'error' in data:
+                log_test("Authorization Test - Invalid Token", "PASS", f"Invalid token blocked correctly: {data['error']}")
+            else:
+                log_test("Authorization Test - Invalid Token", "FAIL", "No error message in response")
+                return False
+        except:
+            log_test("Authorization Test - Invalid Token", "FAIL", "Invalid JSON response")
+            return False
     else:
-        log_test("Authorization Test - Invalid Token", "FAIL", "Should have returned 401")
+        log_test("Authorization Test - Invalid Token", "FAIL", f"Expected 401, got {response.status_code}")
         return False
     
     return True
