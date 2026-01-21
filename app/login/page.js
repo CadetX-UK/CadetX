@@ -51,6 +51,12 @@ export default function LoginPage() {
         } else {
           router.push('/company/dashboard')
         }
+      } else if (data.user.role === 'university') {
+        if (!data.user.onboarding_completed) {
+          router.push('/university/onboarding')
+        } else {
+          router.push('/university/dashboard')
+        }
       }
     } catch (err) {
       setError(err.message)
