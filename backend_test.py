@@ -528,6 +528,7 @@ def test_unauthorized_access():
             data = response.json()
             if 'error' in data:
                 log_test("Authorization Test - Invalid Token", "PASS", f"Invalid token blocked correctly: {data['error']}")
+                return True
             else:
                 log_test("Authorization Test - Invalid Token", "FAIL", "No error message in response")
                 return False
