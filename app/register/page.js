@@ -64,8 +64,12 @@ function RegisterContent() {
       localStorage.setItem('token', data.token)
       localStorage.setItem('user', JSON.stringify(data.user))
 
-      // Redirect to onboarding
-      router.push('/onboarding')
+      // Redirect to onboarding based on role
+      if (selectedRole === 'university') {
+        router.push('/university/onboarding')
+      } else {
+        router.push('/onboarding')
+      }
     } catch (err) {
       setError(err.message)
     } finally {
