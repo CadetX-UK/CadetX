@@ -191,7 +191,8 @@ def test_user_registration():
             log_test("User Registration API - Validation", "FAIL", "Invalid JSON response")
             return False
     else:
-        log_test("User Registration API - Validation", "FAIL", f"Expected 400, got {response.status_code}")
+        status_code = response.status_code if response else "None"
+        log_test("User Registration API - Validation", "FAIL", f"Expected 400, got {status_code}")
         return False
     
     # Test duplicate email
