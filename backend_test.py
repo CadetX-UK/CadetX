@@ -275,15 +275,24 @@ def test_admin_login():
     
     # Test invalid admin credentials
     invalid_admin = {"email": "wrong@email.com", "password": "wrongpass"}
-    response, error = make_request('POST', '/auth/admin/login', invalid_admin, expected_status=401)
+    response, error = make_request('POST', '/auth/admin/login', invalid_admin)
     
-    if error and "Expected status 401" not in error:
+    if error:
         log_test("Admin Login API - Invalid Credentials", "FAIL", error)
         return False
     elif response and response.status_code == 401:
-        log_test("Admin Login API - Invalid Credentials", "PASS", "Invalid admin credentials handled correctly")
+        try:
+            data = response.json()
+            if 'error' in data:
+                log_test("Admin Login API - Invalid Credentials", "PASS", f"Invalid admin credentials handled correctly: {data['error']}")
+            else:
+                log_test("Admin Login API - Invalid Credentials", "FAIL", "No error message in response")
+                return False
+        except:
+            log_test("Admin Login API - Invalid Credentials", "FAIL", "Invalid JSON response")
+            return False
     else:
-        log_test("Admin Login API - Invalid Credentials", "FAIL", "Invalid admin credentials should have failed")
+        log_test("Admin Login API - Invalid Credentials", "FAIL", f"Expected 401, got {response.status_code}")
         return False
     
     return True
