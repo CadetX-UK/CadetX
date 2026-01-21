@@ -7,22 +7,26 @@ Tests all backend APIs according to test_result.md priorities
 import requests
 import json
 import time
+import uuid
 from datetime import datetime
 
 # Configuration
 BASE_URL = "https://hire-talent-6.preview.emergentagent.com/api"
 TIMEOUT = 30
 
+# Generate unique test data for each run
+test_id = str(uuid.uuid4())[:8]
+
 # Test data
 TEST_STUDENT_DATA = {
-    "email": "john.doe@example.com",
+    "email": f"student_{test_id}@example.com",
     "password": "password123",
     "name": "John Doe",
     "role": "student"
 }
 
 TEST_COMPANY_DATA = {
-    "email": "company@techcorp.com", 
+    "email": f"company_{test_id}@techcorp.com", 
     "password": "password123",
     "name": "Tech Corp",
     "role": "company"
