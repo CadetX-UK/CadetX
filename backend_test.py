@@ -65,6 +65,10 @@ def make_request(method, endpoint, data=None, headers=None, expected_status=None
             response = requests.patch(url, json=data, headers=headers, timeout=TIMEOUT)
         else:
             raise ValueError(f"Unsupported method: {method}")
+        
+        # Debug print
+        if endpoint == '/auth/register' and data and data.get('email') == 'invalid-email':
+            print(f"DEBUG make_request: status={response.status_code}, expected={expected_status}")
             
         # Check if response is successful
         if expected_status and response.status_code != expected_status:
