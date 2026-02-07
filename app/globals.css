@@ -1,74 +1,88 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --primary-blue: #0D4ABC;
-  --secondary-red: #9C0005;
+  /* Logo Colors - Locked */
+  --logo-blue: #0D4ABC;
+  --logo-red: #9C0005;
+
+  /* Theme Colors - User Config */
   --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
+  /* #FFFFFF */
+  --foreground: 215 50% 23%;
+  /* #1D3557 */
+
   --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
+  --card-foreground: 215 50% 23%;
+
   --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
-  --primary: 213 83% 39%;
-  --primary-foreground: 210 40% 98%;
-  --secondary: 358 100% 31%;
-  --secondary-foreground: 210 40% 98%;
+  --popover-foreground: 215 50% 23%;
+
+  --primary: 356 75% 56%;
+  /* #E63946 */
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 215 50% 23%;
+  /* #1D3557 */
+  --secondary-foreground: 0 0% 100%;
+
   --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --muted-foreground: 203 39% 44%;
+  /* #457B9D */
+
+  --accent: 203 39% 44%;
+  /* #457B9D */
+  --accent-foreground: 0 0% 100%;
+
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
+
   --border: 214.3 31.8% 91.4%;
   --input: 214.3 31.8% 91.4%;
-  --ring: 213 83% 39%;
+  --ring: 356 75% 56%;
+
   --radius: 0.5rem;
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
-  --primary: 213 83% 50%;
-  --primary-foreground: 222.2 47.4% 11.2%;
-  --secondary: 358 100% 40%;
-  --secondary-foreground: 210 40% 98%;
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
+  --background: 215 50% 23%;
+  --foreground: 0 0% 100%;
+
+  --card: 215 50% 23%;
+  --card-foreground: 0 0% 100%;
+
+  --popover: 215 50% 23%;
+  --popover-foreground: 0 0% 100%;
+
+  --primary: 356 75% 56%;
+  --primary-foreground: 0 0% 100%;
+
+  --secondary: 203 39% 44%;
+  --secondary-foreground: 0 0% 100%;
+
+  --muted: 215 40% 30%;
+  --muted-foreground: 215 20% 65%;
+
+  --accent: 203 39% 44%;
+  --accent-foreground: 0 0% 100%;
+
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 213 83% 50%;
-}
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --border: 215 40% 30%;
+  --input: 215 40% 30%;
+  --ring: 356 75% 56%;
 }
 
 @layer base {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
 }
 
@@ -84,18 +98,25 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #0D4ABC;
+  background: #E63946;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0a3d9c;
+  background: #c92a37;
 }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .animate-fadeIn {
@@ -104,11 +125,11 @@ body {
 
 /* Gradient backgrounds */
 .gradient-primary {
-  background: linear-gradient(135deg, #0D4ABC 0%, #1565C0 100%);
+  background: linear-gradient(135deg, #E63946 0%, #1D3557 100%);
 }
 
 .gradient-hero {
-  background: linear-gradient(135deg, #0D4ABC 0%, #1976D2 50%, #42A5F5 100%);
+  background: linear-gradient(135deg, #1D3557 0%, #457B9D 100%);
 }
 
 /* Card hover effect */
@@ -118,5 +139,5 @@ body {
 
 .card-hover:hover {
   transform: translateY(-5px);
-  box-shadow: 0 20px 40px rgba(13, 74, 188, 0.15);
+  box-shadow: 0 20px 40px rgba(29, 53, 87, 0.15);
 }

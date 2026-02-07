@@ -1,0 +1,218 @@
+// schema.prisma
+// TiDB Cloud Prisma Schema for CadetX
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model User {
+  id                   Int       @id @default(autoincrement())
+  email                String    @unique @db.VarChar(255)
+  password             String    @db.VarChar(255)
+  name                 String    @db.VarChar(255)
+  role                 String    @default("student") @db.VarChar(50)
+  phone                String?   @db.VarChar(50)
+  education            String?   @db.Text
+  experience           String?   @db.Text
+  skills               String?   @db.Text
+  linkedin             String?   @db.VarChar(255)
+  github               String?   @db.VarChar(255)
+  bio                  String?   @db.Text
+  onboardingCompleted  Boolean   @default(false)
+  isApproved           Boolean   @default(false)
+  paymentVerified      Boolean   @default(false)
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  student   Student?
+  company   Company?
+  university University?
+
+  @@map("users")
+}
+
+model Student {
+  id               Int       @id @default(autoincrement())
+  userId           Int       @unique
+  status           String    @default("onboarding") @db.VarChar(50)
+  aptitudeScore    Int?
+  aptitudeAnswers  String?   @db.Text
+  paymentVerified  Boolean   @default(false)
+  paymentId        String?   @db.VarChar(255)
+  paymentAmount    Float?
+  portfolioLinks   String?   @db.Text
+  currentWeek      Int       @default(0)
+  isVetted         Boolean   @default(false)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  user           User              @relation(fields: [userId], references: [id])
+  course         Course?           @relation(fields: [courseId], references: [id])
+  courseId       Int?
+  accessGranted  Boolean           @default(false)
+  accessControls AccessControl[]
+  progress       MaterialProgress[]
+  quizResults    QuizResult[]
+
+  @@map("students")
+}
+
+model Course {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String?  @db.Text
+  price       Float
+  duration    String?  @db.VarChar(50)
+  level       String?  @db.VarChar(50)
+  image       String?  @db.VarChar(255)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  students  Student[]
+  materials Material[]
+
+  @@map("courses")
+}
+
+model Company {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  companyName  String   @db.VarChar(255)
+  companySize  String?  @db.VarChar(100)
+  industry     String?  @db.VarChar(255)
+  website      String?  @db.VarChar(255)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user              User               @relation(fields: [userId], references: [id])
+  candidateRequests CandidateRequest[]
+
+  @@map("companies")
+}
+
+model University {
+  id             Int      @id @default(autoincrement())
+  userId         Int      @unique
+  universityName String   @db.VarChar(255)
+  institutionType String?  @db.VarChar(100)
+  accreditation  String?  @db.VarChar(255)
+  location       String?  @db.VarChar(255)
+  website        String?  @db.VarChar(255)
+  contactPhone   String?  @db.VarChar(50)
+  contactPerson  String?  @db.VarChar(255)
+  studentCount   Int?
+  programs       String?  @db.Text
+  partnershipTier String? @db.VarChar(50)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user        User         @relation(fields: [userId], references: [id])
+  inviteCodes InviteCode[]
+
+  @@map("universities")
+}
+
+model Material {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String?  @db.Text
+  contentUrl  String   @db.VarChar(500)
+  contentType String   @db.VarChar(50)
+  weekNumber  Int
+  order       Int      @default(1)
+  course      Course?  @relation(fields: [courseId], references: [id])
+  courseId    Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  accessControls AccessControl[]
+  progress       MaterialProgress[]
+
+  @@map("materials")
+}
+
+model AccessControl {
+  id         Int       @id @default(autoincrement())
+  studentId  Int
+  materialId Int
+  isUnlocked Boolean   @default(false)
+  unlockedAt DateTime?
+
+  student  Student  @relation(fields: [studentId], references: [id])
+  material Material @relation(fields: [materialId], references: [id])
+
+  @@unique([studentId, materialId])
+  @@map("access_control")
+}
+
+model MaterialProgress {
+  id          Int       @id @default(autoincrement())
+  studentId   Int
+  materialId  Int
+  completed   Boolean   @default(false)
+  completedAt DateTime?
+
+  student  Student  @relation(fields: [studentId], references: [id])
+  material Material @relation(fields: [materialId], references: [id])
+
+  @@unique([studentId, materialId])
+  @@map("material_progress")
+}
+
+model QuizResult {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  week      Int
+  score     Int
+  answers   String   @db.Text
+  takenAt   DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+
+  @@map("quiz_results")
+}
+
+model TalentPool {
+  id           Int      @id @default(autoincrement())
+  studentId    Int
+  skills       String   @db.Text
+  summary      String?  @db.Text
+  available    Boolean  @default(true)
+  addedAt      DateTime @default(now())
+
+  @@map("talent_pool")
+}
+
+model CandidateRequest {
+  id        Int      @id @default(autoincrement())
+  companyId Int
+  studentId Int
+  status    String   @default("pending") @db.VarChar(50)
+  message   String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company Company @relation(fields: [companyId], references: [id])
+
+  @@map("candidate_requests")
+}
+
+model InviteCode {
+  id           Int       @id @default(autoincrement())
+  universityId Int
+  code         String    @unique @db.VarChar(50)
+  maxUses      Int       @default(100)
+  currentUses  Int       @default(0)
+  expiresAt    DateTime?
+  createdAt    DateTime  @default(now())
+
+  university University @relation(fields: [universityId], references: [id])
+
+  @@map("invite_codes")
+}

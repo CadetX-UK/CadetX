@@ -113,7 +113,7 @@ export default function CompanyDashboard() {
   }
 
   const filteredTalent = talent.filter(t => {
-    const matchesSearch = !searchTerm || 
+    const matchesSearch = !searchTerm ||
       t.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       t.skills?.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesScore = !minScore || (t.quiz_avg_score || 0) >= minScore
@@ -135,10 +135,8 @@ export default function CompanyDashboard() {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl font-bold text-[#0D4ABC]">CadetX</span>
+
+              <span className="text-2xl font-extrabold tracking-tight"><span className="text-[#0D4ABC]">Cadet</span><span className="text-[#9C0005]">X</span></span>
             </Link>
             <span className="text-gray-400">|</span>
             <span className="text-gray-600 font-medium">Company Portal</span>
@@ -153,8 +151,8 @@ export default function CompanyDashboard() {
               <LogOut className="w-4 h-4 mr-2" /> Logout
             </Button>
           </div>
-        </div>
-      </header>
+        </div >
+      </header >
 
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Banner */}
@@ -299,50 +297,52 @@ export default function CompanyDashboard() {
       </div>
 
       {/* Request Modal */}
-      {selectedTalent && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => !requestSent && setSelectedTalent(null)}>
-          <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-white rounded-xl w-full max-w-md p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {requestSent ? (
-              <div className="text-center py-8">
-                <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
+      {
+        selectedTalent && (
+          <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4" onClick={() => !requestSent && setSelectedTalent(null)}>
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-white rounded-xl w-full max-w-md p-6"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {requestSent ? (
+                <div className="text-center py-8">
+                  <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                    <CheckCircle className="w-8 h-8 text-green-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900">Request Sent!</h3>
+                  <p className="text-gray-500 mt-2">We'll notify you when there's a response.</p>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900">Request Sent!</h3>
-                <p className="text-gray-500 mt-2">We'll notify you when there's a response.</p>
-              </div>
-            ) : (
-              <>
-                <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                  Request {selectedTalent.name}
-                </h3>
-                <p className="text-gray-500 mb-4">
-                  Send a message to express your interest in this candidate.
-                </p>
-                <Textarea
-                  placeholder="Hi, we're interested in your profile for a Data Analyst role..."
-                  rows={4}
-                  value={requestMessage}
-                  onChange={(e) => setRequestMessage(e.target.value)}
-                  className="mb-4"
-                />
-                <div className="flex gap-3">
-                  <Button variant="outline" className="flex-1" onClick={() => setSelectedTalent(null)}>
-                    Cancel
-                  </Button>
-                  <Button className="flex-1 bg-[#0D4ABC]" onClick={handleRequestCandidate} disabled={!requestMessage.trim()}>
-                    <Send className="w-4 h-4 mr-2" /> Send Request
-                  </Button>
-                </div>
-              </>
-            )}
-          </motion.div>
-        </div>
-      )}
-    </div>
+              ) : (
+                <>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                    Request {selectedTalent.name}
+                  </h3>
+                  <p className="text-gray-500 mb-4">
+                    Send a message to express your interest in this candidate.
+                  </p>
+                  <Textarea
+                    placeholder="Hi, we're interested in your profile for a Data Analyst role..."
+                    rows={4}
+                    value={requestMessage}
+                    onChange={(e) => setRequestMessage(e.target.value)}
+                    className="mb-4"
+                  />
+                  <div className="flex gap-3">
+                    <Button variant="outline" className="flex-1" onClick={() => setSelectedTalent(null)}>
+                      Cancel
+                    </Button>
+                    <Button className="flex-1 bg-[#0D4ABC]" onClick={handleRequestCandidate} disabled={!requestMessage.trim()}>
+                      <Send className="w-4 h-4 mr-2" /> Send Request
+                    </Button>
+                  </div>
+                </>
+              )}
+            </motion.div>
+          </div>
+        )
+      }
+    </div >
   )
 }

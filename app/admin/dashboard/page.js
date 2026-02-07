@@ -17,9 +17,19 @@ export default function AdminDashboard() {
   const router = useRouter()
   const [user, setUser] = useState(null)
   const [students, setStudents] = useState([])
+  const [companies, setCompanies] = useState([])
+  const [universities, setUniversities] = useState([])
   const [materials, setMaterials] = useState([])
   const [loading, setLoading] = useState(true)
   const [expandedStudent, setExpandedStudent] = useState(null)
+  const [courses, setCourses] = useState([])
+  const [newCourse, setNewCourse] = useState({
+    title: '',
+    description: '',
+    price: '',
+    duration: '',
+    level: 'Beginner'
+  })
   const [newMaterial, setNewMaterial] = useState({
     title: '',
     description: '',
@@ -47,7 +57,52 @@ export default function AdminDashboard() {
     setUser(parsedUser)
     fetchStudents(token)
     fetchMaterials(token)
+    fetchCourses(token)
+    fetchCompanies(token)
+    fetchUniversities(token)
   }, [router])
+
+  const fetchCompanies = async (token) => {
+    try {
+      const res = await fetch('/api/admin/companies', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setCompanies(data.companies || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch companies:', error)
+    }
+  }
+
+  const fetchUniversities = async (token) => {
+    try {
+      const res = await fetch('/api/admin/universities', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setUniversities(data.universities || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch universities:', error)
+    }
+  }
+
+  const fetchCourses = async (token) => {
+    try {
+      const res = await fetch('/api/admin/courses', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      const data = await res.json()
+      if (res.ok) {
+        setCourses(data.courses || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch courses:', error)
+    }
+  }
 
   const fetchStudents = async (token) => {
     try {
@@ -113,6 +168,83 @@ export default function AdminDashboard() {
     }
   }
 
+  const handleGrantAccess = async (studentId, accessGranted) => {
+    const token = localStorage.getItem('token')
+    try {
+      await fetch('/api/admin/access', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ student_id: studentId, access_granted: accessGranted })
+      })
+      fetchStudents(token)
+    } catch (error) {
+      console.error('Failed to grant access:', error)
+    }
+  }
+
+  const handleApprove = async (userId, isApproved) => {
+    const token = localStorage.getItem('token')
+    try {
+      const res = await fetch('/api/admin/approve', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ user_id: userId, is_approved: isApproved })
+      })
+      if (res.ok) {
+        fetchStudents(token)
+      }
+    } catch (error) {
+      console.error('Failed to approve user:', error)
+    }
+  }
+
+  const handleAddCourse = async () => {
+    const token = localStorage.getItem('token')
+    try {
+      await fetch('/api/admin/courses', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          ...newCourse,
+          price: parseFloat(newCourse.price)
+        })
+      })
+      setNewCourse({
+        title: '',
+        description: '',
+        price: '',
+        duration: '',
+        level: 'Beginner'
+      })
+      fetchCourses(token)
+    } catch (error) {
+      console.error('Failed to add course:', error)
+    }
+  }
+
+  const handleDeleteCourse = async (id) => {
+    const token = localStorage.getItem('token')
+    if (!confirm('Are you sure? This will delete the course.')) return
+    try {
+      await fetch(`/api/admin/courses?id=${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      })
+      fetchCourses(token)
+    } catch (error) {
+      console.error('Failed to delete course:', error)
+    }
+  }
+
   const handleAddMaterial = async () => {
     const token = localStorage.getItem('token')
     try {
@@ -171,8 +303,8 @@ export default function AdminDashboard() {
             <div className="w-10 h-10 rounded-lg bg-[#9C0005] flex items-center justify-center">
               <Shield className="w-6 h-6 text-white" />
             </div>
-            <span className="text-xl font-bold text-white">CadetX Admin</span>
-          </div>
+            <span className="text-xl font-bold"><span className="text-white">Cadet</span><span className="text-[#9C0005]">X</span><span className="text-white"> Admin</span></span>
+          </div >
 
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-400">Admin: {user?.email}</span>
@@ -180,8 +312,8 @@ export default function AdminDashboard() {
               <LogOut className="w-4 h-4 mr-2" /> Logout
             </Button>
           </div>
-        </div>
-      </header>
+        </div >
+      </header >
 
       <div className="container mx-auto px-4 py-8">
         {/* Stats */}
@@ -229,11 +361,13 @@ export default function AdminDashboard() {
           <Card className="bg-gray-800 border-gray-700">
             <CardContent className="p-4 flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-orange-900 flex items-center justify-center">
-                <BookOpen className="w-6 h-6 text-orange-400" />
+                <Shield className="w-6 h-6 text-orange-400" />
               </div>
               <div>
-                <div className="text-2xl font-bold text-white">{materials.length}</div>
-                <div className="text-sm text-gray-400">Materials</div>
+                <div className="text-2xl font-bold text-white">
+                  {students.filter(s => !s.user?.isApproved).length}
+                </div>
+                <div className="text-sm text-gray-400">Pending Approval</div>
               </div>
             </CardContent>
           </Card>
@@ -243,6 +377,9 @@ export default function AdminDashboard() {
         <Tabs defaultValue="students" className="space-y-6">
           <TabsList className="bg-gray-800">
             <TabsTrigger value="students" className="data-[state=active]:bg-gray-700">Students</TabsTrigger>
+            <TabsTrigger value="companies" className="data-[state=active]:bg-gray-700">Companies</TabsTrigger>
+            <TabsTrigger value="universities" className="data-[state=active]:bg-gray-700">Universities</TabsTrigger>
+            <TabsTrigger value="courses" className="data-[state=active]:bg-gray-700">Courses</TabsTrigger>
             <TabsTrigger value="materials" className="data-[state=active]:bg-gray-700">Materials</TabsTrigger>
           </TabsList>
 
@@ -271,6 +408,9 @@ export default function AdminDashboard() {
                             </div>
                           </div>
                           <div className="flex items-center gap-4">
+                            <span className={`px-3 py-1 rounded-full text-xs font-medium ${student.user?.isApproved ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                              {student.user?.isApproved ? 'Approved' : 'Pending'}
+                            </span>
                             <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadge(student.status)}`}>
                               {student.status?.replace('_', ' ')}
                             </span>
@@ -304,22 +444,6 @@ export default function AdminDashboard() {
                                 <div className="text-sm">
                                   <span className="text-gray-400">Quizzes Taken:</span>
                                   <span className="text-white ml-2 font-medium">{student.quiz_count}</span>
-                                </div>
-                                <div className="text-sm">
-                                  <span className="text-gray-400">Current Week:</span>
-                                  <span className="text-white ml-2 font-medium">{student.current_week || 0}</span>
-                                </div>
-                                <div className="text-sm">
-                                  <span className="text-gray-400">Payment:</span>
-                                  <span className={`ml-2 font-medium ${student.payment_verified ? 'text-green-400' : 'text-red-400'}`}>
-                                    {student.payment_verified ? 'Verified' : 'Pending'}
-                                  </span>
-                                </div>
-                              </div>
-
-                              <div className="space-y-3">
-                                <div className="text-sm text-gray-400 mb-2">Actions:</div>
-                                <div className="flex flex-wrap gap-2">
                                   {[1, 2, 3, 4].map((week) => (
                                     <Button
                                       key={week}
@@ -342,6 +466,22 @@ export default function AdminDashboard() {
                                     <Star className="w-4 h-4 mr-2" />
                                     {student.is_vetted ? 'Remove from Talent Pool' : 'Add to Talent Pool'}
                                   </Button>
+                                  <Button
+                                    size="sm"
+                                    className={`ml-2 ${student.user?.isApproved ? 'bg-orange-600 hover:bg-orange-700' : 'bg-green-600 hover:bg-green-700'}`}
+                                    onClick={() => handleApprove(student.userId, !student.user?.isApproved)}
+                                  >
+                                    {student.user?.isApproved ? <XCircle className="w-4 h-4 mr-2" /> : <CheckCircle className="w-4 h-4 mr-2" />}
+                                    {student.user?.isApproved ? 'Deactivate Account' : 'Approve & Activate'}
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    className={`ml-2 ${student.accessGranted ? 'bg-red-600 hover:bg-red-700' : 'bg-green-600 hover:bg-green-700'}`}
+                                    onClick={() => handleGrantAccess(student.userId, !student.accessGranted)}
+                                  >
+                                    {student.accessGranted ? <Lock className="w-4 h-4 mr-2" /> : <Unlock className="w-4 h-4 mr-2" />}
+                                    {student.accessGranted ? 'Revoke Access' : 'Grant Access'}
+                                  </Button>
                                 </div>
                               </div>
                             </div>
@@ -358,6 +498,170 @@ export default function AdminDashboard() {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="companies">
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white">Company Management</CardTitle>
+                <CardDescription className="text-gray-400">Review and approve company registrations</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {companies.map((company) => (
+                    <div key={company.id} className="bg-gray-700/50 p-4 rounded-lg flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-lg bg-blue-900 flex items-center justify-center">
+                          <Building2 className="w-5 h-5 text-blue-300" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-white">{company.companyName}</div>
+                          <div className="text-sm text-gray-400">{company.user?.email}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${company.user?.isApproved ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                          {company.user?.isApproved ? 'Approved' : 'Pending Approval'}
+                        </span>
+                        <Button
+                          size="sm"
+                          className={company.user?.isApproved ? 'bg-orange-600' : 'bg-green-600'}
+                          onClick={() => handleApprove(company.userId, !company.user?.isApproved)}
+                        >
+                          {company.user?.isApproved ? 'Deactivate' : 'Approve'}
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                  {companies.length === 0 && <p className="text-center text-gray-400 py-4">No companies yet</p>}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="universities">
+            <Card className="bg-gray-800 border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-white">University Management</CardTitle>
+                <CardDescription className="text-gray-400">Review and approve university partners</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {universities.map((uni) => (
+                    <div key={uni.id} className="bg-gray-700/50 p-4 rounded-lg flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-lg bg-red-900 flex items-center justify-center">
+                          <Building className="w-5 h-5 text-red-300" />
+                        </div>
+                        <div>
+                          <div className="font-medium text-white">{uni.universityName}</div>
+                          <div className="text-sm text-gray-400">{uni.user?.email}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${uni.user?.isApproved ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                          {uni.user?.isApproved ? 'Approved' : 'Pending Approval'}
+                        </span>
+                        <Button
+                          size="sm"
+                          className={uni.user?.isApproved ? 'bg-orange-600' : 'bg-green-600'}
+                          onClick={() => handleApprove(uni.userId, !uni.user?.isApproved)}
+                        >
+                          {uni.user?.isApproved ? 'Deactivate' : 'Approve'}
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                  {universities.length === 0 && <p className="text-center text-gray-400 py-4">No universities yet</p>}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="courses">
+            <div className="grid lg:grid-cols-2 gap-6">
+              <Card className="bg-gray-800 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-white">Add New Course</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <Input
+                    placeholder="Course Title"
+                    className="bg-gray-700 border-gray-600 text-white"
+                    value={newCourse.title}
+                    onChange={(e) => setNewCourse({ ...newCourse, title: e.target.value })}
+                  />
+                  <Input
+                    placeholder="Description"
+                    className="bg-gray-700 border-gray-600 text-white"
+                    value={newCourse.description}
+                    onChange={(e) => setNewCourse({ ...newCourse, description: e.target.value })}
+                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <Input
+                      type="number"
+                      placeholder="Price"
+                      className="bg-gray-700 border-gray-600 text-white"
+                      value={newCourse.price}
+                      onChange={(e) => setNewCourse({ ...newCourse, price: e.target.value })}
+                    />
+                    <Input
+                      placeholder="Duration (e.g. 12 weeks)"
+                      className="bg-gray-700 border-gray-600 text-white"
+                      value={newCourse.duration}
+                      onChange={(e) => setNewCourse({ ...newCourse, duration: e.target.value })}
+                    />
+                  </div>
+                  <select
+                    className="w-full bg-gray-700 border border-gray-600 text-white rounded-md px-3 py-2"
+                    value={newCourse.level}
+                    onChange={(e) => setNewCourse({ ...newCourse, level: e.target.value })}
+                  >
+                    <option value="Beginner">Beginner</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Advanced">Advanced</option>
+                  </select>
+                  <Button onClick={handleAddCourse} className="w-full bg-[#0D4ABC]">
+                    <Plus className="w-4 h-4 mr-2" /> Add Course
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-gray-800 border-gray-700">
+                <CardHeader>
+                  <CardTitle className="text-white">Existing Courses</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {courses.length > 0 ? (
+                    <div className="space-y-3">
+                      {courses.map((course) => (
+                        <div key={course.id} className="flex items-center justify-between p-4 bg-gray-700/50 rounded-lg">
+                          <div>
+                            <div className="text-white font-medium">{course.title}</div>
+                            <div className="text-sm text-gray-400">
+                              {course.level} • {course.duration} • ₹{course.price}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {course._count?.students || 0} students enrolled
+                            </div>
+                          </div>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                            onClick={() => handleDeleteCourse(course.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8 text-gray-400">No courses added yet</div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
 
           <TabsContent value="materials">
@@ -455,6 +759,6 @@ export default function AdminDashboard() {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </div >
   )
 }

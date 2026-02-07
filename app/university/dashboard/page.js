@@ -165,7 +165,7 @@ export default function UniversityDashboard() {
   }
 
   const filteredStudents = students.filter(s => {
-    const matchesSearch = !searchTerm || 
+    const matchesSearch = !searchTerm ||
       s.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       s.email?.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesStatus = statusFilter === 'all' || s.status === statusFilter
@@ -193,10 +193,8 @@ export default function UniversityDashboard() {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Link href="/" className="flex items-center gap-2">
-              <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl font-bold text-[#0D4ABC]">CadetX</span>
+
+              <span className="text-2xl font-extrabold tracking-tight"><span className="text-[#0D4ABC]">Cadet</span><span className="text-[#9C0005]">X</span></span>
             </Link>
             <span className="text-gray-400">|</span>
             <span className="text-gray-600 font-medium">University Portal</span>
@@ -211,8 +209,8 @@ export default function UniversityDashboard() {
               <LogOut className="w-4 h-4 mr-2" /> Logout
             </Button>
           </div>
-        </div>
-      </header>
+        </div >
+      </header >
 
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Banner */}
@@ -227,11 +225,10 @@ export default function UniversityDashboard() {
               <p className="text-white/80">Track your students' progress and manage enrollments</p>
             </div>
             <div className="mt-4 md:mt-0">
-              <span className={`px-4 py-2 rounded-full text-sm font-medium ${
-                university?.partnership_status === 'active' 
-                  ? 'bg-green-500/20 text-green-100' 
-                  : 'bg-yellow-500/20 text-yellow-100'
-              }`}>
+              <span className={`px-4 py-2 rounded-full text-sm font-medium ${university?.partnership_status === 'active'
+                ? 'bg-green-500/20 text-green-100'
+                : 'bg-yellow-500/20 text-yellow-100'
+                }`}>
                 Partnership: {university?.partnership_status || 'Pending'}
               </span>
             </div>
@@ -370,18 +367,16 @@ export default function UniversityDashboard() {
                                 </div>
                               </td>
                               <td className="py-3 px-4">
-                                <span className={`font-medium ${
-                                  student.aptitude_score >= 80 ? 'text-green-600' :
+                                <span className={`font-medium ${student.aptitude_score >= 80 ? 'text-green-600' :
                                   student.aptitude_score >= 60 ? 'text-yellow-600' : 'text-gray-600'
-                                }`}>
+                                  }`}>
                                   {student.aptitude_score || '-'}
                                 </span>
                               </td>
                               <td className="py-3 px-4">
-                                <span className={`font-medium ${
-                                  student.quiz_avg_score >= 80 ? 'text-green-600' :
+                                <span className={`font-medium ${student.quiz_avg_score >= 80 ? 'text-green-600' :
                                   student.quiz_avg_score >= 60 ? 'text-yellow-600' : 'text-gray-600'
-                                }`}>
+                                  }`}>
                                   {student.quiz_avg_score || '-'}
                                 </span>
                               </td>
@@ -606,6 +601,6 @@ export default function UniversityDashboard() {
           </TabsContent>
         </Tabs>
       </div>
-    </div>
+    </div >
   )
 }

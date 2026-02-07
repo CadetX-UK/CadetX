@@ -1,8 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { 
-  GraduationCap, BookOpen, Award, Briefcase, CheckCircle, 
+import {
+  GraduationCap, BookOpen, Award, Briefcase, CheckCircle,
   ArrowRight, Star, Play, Users, Target, Zap, Clock
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -15,10 +15,8 @@ const Navigation = () => (
     <div className="container mx-auto px-4">
       <div className="flex items-center justify-between h-16">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-2xl font-bold text-[#0D4ABC]">CadetX</span>
+
+          <span className="text-3xl font-extrabold tracking-tight"><span className="text-[#0D4ABC]">Cadet</span><span className="text-[#9C0005]">X</span></span>
         </Link>
         <div className="hidden md:flex items-center space-x-6">
           <Link href="/students" className="font-medium text-[#0D4ABC]">For Students</Link>
@@ -41,10 +39,8 @@ const Footer = () => (
     <div className="container mx-auto px-4">
       <div className="flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center space-x-2 mb-4 md:mb-0">
-          <div className="w-10 h-10 rounded-lg bg-[#0D4ABC] flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-xl font-bold">CadetX</span>
+
+          <span className="text-2xl font-extrabold tracking-tight"><span className="text-[#0D4ABC]">Cadet</span><span className="text-[#9C0005]">X</span></span>
         </div>
         <p className="text-gray-400 text-sm">© 2025 CadetX. All rights reserved.</p>
       </div>
@@ -74,7 +70,7 @@ export default function StudentsPage() {
   return (
     <main>
       <Navigation />
-      
+
       {/* Hero */}
       <section className="pt-24 pb-16 gradient-hero text-white">
         <div className="container mx-auto px-4">

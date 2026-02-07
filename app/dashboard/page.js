@@ -165,16 +165,35 @@ export default function StudentDashboard() {
     )
   }
 
+  if (studentData && !studentData.accessGranted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+        <Card className="max-w-md w-full text-center">
+          <CardContent className="pt-12 pb-12">
+            <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Lock className="w-10 h-10 text-yellow-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Access Pending</h2>
+            <p className="text-gray-600 mb-8">
+              Your enrollment is currently under review. Please wait for an administrator to grant you access to the course materials.
+            </p>
+            <Button variant="outline" onClick={handleLogout}>
+              <LogOut className="w-4 h-4 mr-2" /> Logout
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white border-b sticky top-0 z-40">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
-              <GraduationCap className="w-6 h-6 text-white" />
-            </div>
-            <span className="text-xl font-bold text-[#0D4ABC]">CadetX</span>
+
+            <span className="text-2xl font-extrabold tracking-tight"><span className="text-[#0D4ABC]">Cadet</span><span className="text-[#9C0005]">X</span></span>
           </div>
 
           <div className="flex items-center gap-4">
@@ -186,8 +205,8 @@ export default function StudentDashboard() {
               <LogOut className="w-4 h-4 mr-2" /> Logout
             </Button>
           </div>
-        </div>
-      </header>
+        </div >
+      </header >
 
       <div className="container mx-auto px-4 py-8">
         {/* Welcome Banner */}
@@ -305,11 +324,10 @@ export default function StudentDashboard() {
                         {weekMaterials.map((material) => (
                           <div
                             key={material.id}
-                            className={`flex items-center justify-between p-4 rounded-lg border transition-all ${
-                              material.is_unlocked
-                                ? 'hover:bg-gray-50 cursor-pointer border-gray-200'
-                                : 'bg-gray-50 border-gray-100'
-                            }`}
+                            className={`flex items-center justify-between p-4 rounded-lg border transition-all ${material.is_unlocked
+                              ? 'hover:bg-gray-50 cursor-pointer border-gray-200'
+                              : 'bg-gray-50 border-gray-100'
+                              }`}
                             onClick={() => material.is_unlocked && setSelectedMaterial(material)}
                           >
                             <div className="flex items-center gap-3">
@@ -380,10 +398,9 @@ export default function StudentDashboard() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <div className={`text-2xl font-bold ${
-                            quiz.score >= 80 ? 'text-green-600' :
+                          <div className={`text-2xl font-bold ${quiz.score >= 80 ? 'text-green-600' :
                             quiz.score >= 60 ? 'text-yellow-600' : 'text-red-600'
-                          }`}>
+                            }`}>
                             {quiz.score}%
                           </div>
                         </div>
@@ -515,6 +532,6 @@ export default function StudentDashboard() {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </div >
   )
 }

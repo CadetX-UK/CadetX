@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { 
-  GraduationCap, User, FileText, CreditCard, CheckCircle, 
+import {
+  GraduationCap, User, FileText, CreditCard, CheckCircle,
   ArrowRight, ArrowLeft, Loader2, BookOpen, Briefcase,
   Linkedin, Github, Phone, Building2
 } from 'lucide-react'
@@ -68,6 +68,10 @@ export default function OnboardingPage() {
   const [aptitudeAnswers, setAptitudeAnswers] = useState({})
   const [currentQuestion, setCurrentQuestion] = useState(0)
 
+  // Course Selection
+  const [courses, setCourses] = useState([])
+  const [selectedCourse, setSelectedCourse] = useState(null)
+
   useEffect(() => {
     const userData = localStorage.getItem('user')
     if (!userData) {
@@ -75,7 +79,21 @@ export default function OnboardingPage() {
       return
     }
     setUser(JSON.parse(userData))
+    setUser(JSON.parse(userData))
+    fetchCourses()
   }, [router])
+
+  const fetchCourses = async () => {
+    try {
+      const res = await fetch('/api/courses')
+      const data = await res.json()
+      if (res.ok) {
+        setCourses(data.courses || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch courses:', error)
+    }
+  }
 
   const getToken = () => localStorage.getItem('token')
 
@@ -146,6 +164,26 @@ export default function OnboardingPage() {
     }
   }
 
+  const handleCourseSelect = async (course) => {
+    setSelectedCourse(course)
+    setLoading(true)
+    try {
+      await fetch('/api/student/enroll', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getToken()}`
+        },
+        body: JSON.stringify({ course_id: course.id })
+      })
+      setStep(4)
+    } catch (error) {
+      setError('Failed to select course')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   const handlePayment = async () => {
     setLoading(true)
     setError('')
@@ -160,7 +198,7 @@ export default function OnboardingPage() {
         },
         body: JSON.stringify({
           payment_id: 'mock_' + Date.now(),
-          amount: 9999
+          amount: selectedCourse?.price || 9999
         })
       })
 
@@ -177,7 +215,7 @@ export default function OnboardingPage() {
       const updatedUser = { ...user, onboarding_completed: true, payment_verified: true }
       localStorage.setItem('user', JSON.stringify(updatedUser))
 
-      setStep(4)
+      setStep(5)
     } catch (err) {
       setError(err.message)
     } finally {
@@ -185,7 +223,7 @@ export default function OnboardingPage() {
     }
   }
 
-  const totalSteps = user?.role === 'company' ? 2 : 4
+  const totalSteps = user?.role === 'company' ? 2 : 5
   const progress = (step / totalSteps) * 100
 
   if (!user) return null
@@ -195,9 +233,7 @@ export default function OnboardingPage() {
       <div className="max-w-2xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl gradient-primary mb-4">
-            <GraduationCap className="w-8 h-8 text-white" />
-          </div>
+
           <h1 className="text-3xl font-bold text-gray-900">Welcome to CadetX</h1>
           <p className="text-gray-600 mt-2">Let's complete your profile</p>
         </div>
@@ -394,11 +430,10 @@ export default function OnboardingPage() {
                         <button
                           key={idx}
                           onClick={() => setAptitudeAnswers({ ...aptitudeAnswers, [currentQuestion]: idx })}
-                          className={`w-full p-4 text-left rounded-lg border-2 transition-all ${
-                            aptitudeAnswers[currentQuestion] === idx
-                              ? 'border-[#0D4ABC] bg-blue-50'
-                              : 'border-gray-200 hover:border-gray-300'
-                          }`}
+                          className={`w-full p-4 text-left rounded-lg border-2 transition-all ${aptitudeAnswers[currentQuestion] === idx
+                            ? 'border-[#0D4ABC] bg-blue-50'
+                            : 'border-gray-200 hover:border-gray-300'
+                            }`}
                         >
                           {option}
                         </button>
@@ -438,10 +473,63 @@ export default function OnboardingPage() {
             </motion.div>
           )}
 
-          {/* Step 3: Payment (Students Only) */}
+          {/* Step 3: Course Selection (Students Only) */}
           {step === 3 && user.role === 'student' && (
             <motion.div
               key="step3"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+            >
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-[#0D4ABC]" />
+                    Select Your Course
+                  </CardTitle>
+                  <CardDescription>Choose the program that fits your goals</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid gap-4">
+                    {courses.length > 0 ? (
+                      courses.map((course) => (
+                        <div
+                          key={course.id}
+                          className="border rounded-lg p-4 hover:border-[#0D4ABC] cursor-pointer transition-all bg-white hover:shadow-md"
+                          onClick={() => handleCourseSelect(course)}
+                        >
+                          <div className="flex justify-between items-start mb-2">
+                            <div>
+                              <h3 className="font-bold text-lg text-gray-900">{course.title}</h3>
+                              <p className="text-sm text-gray-500">{course.level} • {course.duration}</p>
+                            </div>
+                            <span className="font-bold text-[#0D4ABC]">₹{course.price}</span>
+                          </div>
+                          <p className="text-sm text-gray-600 mb-3">{course.description}</p>
+                          <Button
+                            className="w-full bg-gray-100 text-gray-900 hover:bg-[#0D4ABC] hover:text-white"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              handleCourseSelect(course)
+                            }}
+                          >
+                            Select Course
+                          </Button>
+                        </div>
+                      ))
+                    ) : (
+                      <div className="text-center py-8 text-gray-500">No courses available at the moment.</div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          )}
+
+          {/* Step 4: Payment (Students Only) */}
+          {step === 4 && user.role === 'student' && (
+            <motion.div
+              key="step4"
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
@@ -457,8 +545,8 @@ export default function OnboardingPage() {
                 <CardContent>
                   <div className="bg-gray-50 rounded-xl p-6 mb-6">
                     <div className="flex justify-between items-center mb-4">
-                      <span className="text-gray-600">CadetX Data Analytics Program</span>
-                      <span className="text-2xl font-bold text-gray-900">₹9,999</span>
+                      <span className="text-gray-600">{selectedCourse?.title || 'CadetX Program'}</span>
+                      <span className="text-2xl font-bold text-gray-900">₹{selectedCourse?.price || '9,999'}</span>
                     </div>
                     <ul className="space-y-2 text-sm text-gray-600">
                       <li className="flex items-center gap-2">
@@ -491,17 +579,17 @@ export default function OnboardingPage() {
                     className="w-full bg-[#9C0005] hover:bg-[#7a0004]"
                     disabled={loading}
                   >
-                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Pay ₹9,999'}
+                    {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : `Pay ₹${selectedCourse?.price || '9,999'}`}
                   </Button>
                 </CardContent>
               </Card>
             </motion.div>
           )}
 
-          {/* Step 4: Success */}
-          {step === 4 && (
+          {/* Step 5: Success */}
+          {step === 5 && (
             <motion.div
-              key="step4"
+              key="step5"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
             >
@@ -512,7 +600,7 @@ export default function OnboardingPage() {
                   </div>
                   <h2 className="text-2xl font-bold text-gray-900 mb-2">You're All Set!</h2>
                   <p className="text-gray-600 mb-8">
-                    Welcome to CadetX! Your learning journey begins now.
+                    Welcome to CadetX! Your enrollment is pending admin approval.
                   </p>
                   <Button
                     onClick={() => router.push('/dashboard')}

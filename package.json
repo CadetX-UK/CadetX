@@ -3,7 +3,7 @@
     "version": "0.1.0",
     "private": true,
     "scripts": {
-        "dev": "NODE_OPTIONS='--max-old-space-size=512' next dev --hostname 0.0.0.0 --port 3000",
+        "dev": "next dev --hostname 0.0.0.0 --port 3000",
         "dev:no-reload": "next dev --hostname 0.0.0.0 --port 3000",
         "dev:webpack": "next dev --hostname 0.0.0.0 --port 3000",
         "build": "next build",
@@ -11,6 +11,7 @@
     },
     "dependencies": {
         "@hookform/resolvers": "^5.1.1",
+        "@prisma/client": "^6.4.1",
         "@radix-ui/react-accordion": "^1.2.11",
         "@radix-ui/react-alert-dialog": "^1.1.14",
         "@radix-ui/react-aspect-ratio": "^1.1.7",
@@ -41,18 +42,22 @@
         "@tanstack/react-table": "^8.21.3",
         "axios": "^1.10.0",
         "bcryptjs": "^3.0.3",
+        "cd": "^0.3.3",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "cmdk": "^1.1.1",
         "date-fns": "^4.1.0",
         "embla-carousel-react": "^8.6.0",
+        "firebase": "^12.8.0",
         "framer-motion": "^12.27.5",
         "input-otp": "^1.4.2",
         "jsonwebtoken": "^9.0.3",
         "lucide-react": "^0.516.0",
         "mongodb": "^6.6.0",
+        "mysql2": "^3.16.2",
         "next": "14.2.3",
         "next-themes": "^0.4.6",
+        "nextjs-mongo-template": "file:",
         "react": "^18",
         "react-day-picker": "^9.7.0",
         "react-dom": "^18",
@@ -70,7 +75,9 @@
         "autoprefixer": "^10.4.19",
         "globals": "^16.2.0",
         "postcss": "^8",
-        "tailwindcss": "^3.4.1"
+        "prisma": "^6.4.1",
+        "tailwindcss": "^3.4.1",
+        "tsx": "^4.21.0"
     },
     "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

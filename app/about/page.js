@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { 
+import {
   GraduationCap, Target, Heart, Users, Award, Rocket,
   ArrowRight, Linkedin, Twitter, Mail
 } from 'lucide-react'
@@ -15,10 +15,8 @@ const Navigation = () => (
     <div className="container mx-auto px-4">
       <div className="flex items-center justify-between h-16">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-2xl font-bold text-[#0D4ABC]">CadetX</span>
+
+          <span className="text-3xl font-extrabold tracking-tight"><span className="text-[#0D4ABC]">Cadet</span><span className="text-[#9C0005]">X</span></span>
         </Link>
         <div className="hidden md:flex items-center space-x-6">
           <Link href="/students" className="text-gray-700 hover:text-[#0D4ABC]">For Students</Link>
@@ -41,10 +39,8 @@ const Footer = () => (
     <div className="container mx-auto px-4">
       <div className="flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center space-x-2 mb-4 md:mb-0">
-          <div className="w-10 h-10 rounded-lg bg-[#0D4ABC] flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-xl font-bold">CadetX</span>
+
+          <span className="text-2xl font-extrabold tracking-tight"><span className="text-[#0D4ABC]">Cadet</span><span className="text-[#9C0005]">X</span></span>
         </div>
         <p className="text-gray-400 text-sm">© 2025 CadetX. All rights reserved.</p>
       </div>
@@ -69,7 +65,7 @@ export default function AboutPage() {
   return (
     <main>
       <Navigation />
-      
+
       {/* Hero */}
       <section className="pt-24 pb-16 gradient-hero text-white">
         <div className="container mx-auto px-4">
@@ -82,7 +78,7 @@ export default function AboutPage() {
                 About CadetX
               </h1>
               <p className="text-xl text-white/90">
-                We're on a mission to train the next generation of data professionals 
+                We're on a mission to train the next generation of data professionals
                 and connect them with companies who value quality talent.
               </p>
             </motion.div>
@@ -97,18 +93,18 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
             <div className="prose prose-lg text-gray-600">
               <p className="mb-4">
-                CadetX was born from a simple observation: there's a massive gap between 
-                what colleges teach and what companies need. Thousands of talented individuals 
+                CadetX was born from a simple observation: there's a massive gap between
+                what colleges teach and what companies need. Thousands of talented individuals
                 struggle to break into data careers, while companies struggle to find quality talent.
               </p>
               <p className="mb-4">
-                We decided to bridge this gap by creating an intensive, practical training program 
-                that transforms motivated individuals into job-ready data professionals. But we didn't 
-                stop there—we also built a talent marketplace that gives our graduates direct access 
+                We decided to bridge this gap by creating an intensive, practical training program
+                that transforms motivated individuals into job-ready data professionals. But we didn't
+                stop there—we also built a talent marketplace that gives our graduates direct access
                 to hiring companies.
               </p>
               <p>
-                Today, CadetX has trained over 2,000 data professionals with a 95% placement rate. 
+                Today, CadetX has trained over 2,000 data professionals with a 95% placement rate.
                 Our graduates work at leading companies across tech, finance, healthcare, and more.
               </p>
             </div>
@@ -123,16 +119,16 @@ export default function AboutPage() {
             <div>
               <h3 className="text-2xl font-bold text-[#0D4ABC] mb-4">Our Mission</h3>
               <p className="text-lg text-gray-600">
-                To democratize access to data careers by providing world-class training 
-                and direct pathways to employment for motivated individuals, regardless 
+                To democratize access to data careers by providing world-class training
+                and direct pathways to employment for motivated individuals, regardless
                 of their background.
               </p>
             </div>
             <div>
               <h3 className="text-2xl font-bold text-[#9C0005] mb-4">Our Vision</h3>
               <p className="text-lg text-gray-600">
-                A world where talent wins over credentials, where anyone with determination 
-                can build a successful career in data, and where companies can hire with 
+                A world where talent wins over credentials, where anyone with determination
+                can build a successful career in data, and where companies can hire with
                 complete confidence.
               </p>
             </div>
@@ -186,8 +182,8 @@ export default function AboutPage() {
                 transition={{ delay: idx * 0.1 }}
               >
                 <Card className="text-center overflow-hidden">
-                  <img 
-                    src={member.image} 
+                  <img
+                    src={member.image}
                     alt={member.name}
                     className="w-full h-48 object-cover"
                   />
@@ -226,7 +222,7 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Join the CadetX Community</h2>
           <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-            Whether you're looking to start your data career or hire great talent, 
+            Whether you're looking to start your data career or hire great talent,
             we'd love to have you.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

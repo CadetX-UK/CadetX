@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { 
-  GraduationCap, Mail, Phone, MapPin, Send, 
+import {
+  GraduationCap, Mail, Phone, MapPin, Send,
   MessageSquare, Clock, CheckCircle, Loader2
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -18,10 +18,8 @@ const Navigation = () => (
     <div className="container mx-auto px-4">
       <div className="flex items-center justify-between h-16">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-2xl font-bold text-[#0D4ABC]">CadetX</span>
+
+          <span className="text-3xl font-extrabold tracking-tight"><span className="text-[#0D4ABC]">Cadet</span><span className="text-[#9C0005]">X</span></span>
         </Link>
         <div className="hidden md:flex items-center space-x-6">
           <Link href="/students" className="text-gray-700 hover:text-[#0D4ABC]">For Students</Link>
@@ -44,10 +42,8 @@ const Footer = () => (
     <div className="container mx-auto px-4">
       <div className="flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center space-x-2 mb-4 md:mb-0">
-          <div className="w-10 h-10 rounded-lg bg-[#0D4ABC] flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-xl font-bold">CadetX</span>
+
+          <span className="text-2xl font-extrabold tracking-tight"><span className="text-[#0D4ABC]">Cadet</span><span className="text-[#9C0005]">X</span></span>
         </div>
         <p className="text-gray-400 text-sm">© 2025 CadetX. All rights reserved.</p>
       </div>
@@ -68,10 +64,10 @@ export default function ContactPage() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
-    
+
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500))
-    
+
     setLoading(false)
     setSubmitted(true)
   }
@@ -86,7 +82,7 @@ export default function ContactPage() {
   return (
     <main>
       <Navigation />
-      
+
       {/* Hero */}
       <section className="pt-24 pb-16 gradient-hero text-white">
         <div className="container mx-auto px-4">
@@ -99,7 +95,7 @@ export default function ContactPage() {
                 Get in Touch
               </h1>
               <p className="text-xl text-white/90">
-                Have questions? We'd love to hear from you. Send us a message 
+                Have questions? We'd love to hear from you. Send us a message
                 and we'll respond as soon as possible.
               </p>
             </motion.div>

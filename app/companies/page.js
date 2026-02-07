@@ -1,8 +1,8 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { 
-  GraduationCap, Building2, Users, Shield, CheckCircle, 
+import {
+  GraduationCap, Building2, Users, Shield, CheckCircle,
   ArrowRight, Star, Clock, Award, Target, Zap, Filter
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -15,10 +15,8 @@ const Navigation = () => (
     <div className="container mx-auto px-4">
       <div className="flex items-center justify-between h-16">
         <Link href="/" className="flex items-center space-x-2">
-          <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-2xl font-bold text-[#0D4ABC]">CadetX</span>
+
+          <span className="text-3xl font-extrabold tracking-tight"><span className="text-[#0D4ABC]">Cadet</span><span className="text-[#9C0005]">X</span></span>
         </Link>
         <div className="hidden md:flex items-center space-x-6">
           <Link href="/students" className="text-gray-700 hover:text-[#0D4ABC]">For Students</Link>
@@ -41,10 +39,8 @@ const Footer = () => (
     <div className="container mx-auto px-4">
       <div className="flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center space-x-2 mb-4 md:mb-0">
-          <div className="w-10 h-10 rounded-lg bg-[#0D4ABC] flex items-center justify-center">
-            <GraduationCap className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-xl font-bold">CadetX</span>
+
+          <span className="text-2xl font-extrabold tracking-tight"><span className="text-[#0D4ABC]">Cadet</span><span className="text-[#9C0005]">X</span></span>
         </div>
         <p className="text-gray-400 text-sm">© 2025 CadetX. All rights reserved.</p>
       </div>
@@ -70,7 +66,7 @@ export default function CompaniesPage() {
   return (
     <main>
       <Navigation />
-      
+
       {/* Hero */}
       <section className="pt-24 pb-16 bg-gradient-to-br from-gray-900 to-gray-800 text-white">
         <div className="container mx-auto px-4">
@@ -86,7 +82,7 @@ export default function CompaniesPage() {
                 Hire Pre-Vetted Data Talent with Confidence
               </h1>
               <p className="text-xl text-gray-300 mb-8">
-                Access our curated pool of trained, assessed, and job-ready data professionals. 
+                Access our curated pool of trained, assessed, and job-ready data professionals.
                 Every cadet is proven—no more bad hires.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -107,8 +103,8 @@ export default function CompaniesPage() {
               animate={{ opacity: 1, x: 0 }}
               className="hidden lg:block"
             >
-              <img 
-                src="https://images.pexels.com/photos/5439368/pexels-photo-5439368.jpeg" 
+              <img
+                src="https://images.pexels.com/photos/5439368/pexels-photo-5439368.jpeg"
                 alt="Corporate hiring"
                 className="rounded-2xl shadow-2xl"
               />
