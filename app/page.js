@@ -176,7 +176,7 @@ const MindMapSection = () => {
 
           <div className="relative z-10 px-6">
             <h2 className="text-4xl md:text-6xl font-black text-white mb-8 tracking-tight drop-shadow-xl">
-              WHY COMPANIES CHOOSE <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#4CC9F0] to-[#4361EE]">CADETX</span>
+              WHY COMPANIES CHOOSE <span className="text-[#4CC9F0]">CADET</span><span className="text-[#E63946]">X</span>
             </h2>
 
             <div className="max-w-4xl mx-auto space-y-4 text-xl md:text-2xl text-blue-100 font-medium leading-relaxed">
