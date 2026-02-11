@@ -48,6 +48,154 @@ const Footer = () => (
   </footer>
 )
 
+// Hero Section
+const HeroSection = () => (
+  <section className="pt-24 pb-16 bg-[#1D3557] text-white">
+    <div className="container mx-auto px-4">
+      <div className="max-w-4xl mx-auto text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <span className="inline-block px-4 py-2 bg-white/10 rounded-full text-sm font-medium mb-6">
+            Building the Next Generation of Job‑Ready Data Professionals
+          </span>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+            Talent is Everywhere — But Opportunity Isn’t.
+          </h1>
+          <p className="text-xl text-white/90 max-w-3xl mx-auto leading-relaxed">
+            Every year, thousands of students graduate with strong academic knowledge but struggle to enter the industry because they lack one thing employers expect: <span className="font-bold text-[#E63946]">real, workplace‑aligned experience.</span>
+            <br className="mt-4 block" />
+            CadetX exists to bridge that gap.
+          </p>
+        </motion.div>
+      </div>
+    </div>
+  </section>
+)
+
+// Our Story (The Gap)
+const StorySection = () => (
+  <section className="py-20 bg-white">
+    <div className="container mx-auto px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-[#1D3557] mb-6">Why CadetX Exists</h2>
+          <p className="text-xl text-[#457B9D] font-medium">Because the traditional education‑to‑employment pipeline is broken.</p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 mb-12 text-center">
+          {[
+            { title: 'Students', desc: 'Learn theory without practice.' },
+            { title: 'Universities', desc: 'Carry the pressure of placements.' },
+            { title: 'Employers', desc: 'Struggle to find job‑ready talent.' }
+          ].map((item, idx) => (
+            <div key={idx} className="p-6 bg-gray-50 rounded-xl border border-gray-100">
+              <h3 className="text-lg font-bold text-[#1D3557] mb-2">{item.title}</h3>
+              <p className="text-[#457B9D]">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="bg-[#f0f4f8] p-8 rounded-2xl text-center border-l-4 border-[#0D4ABC]">
+          <p className="text-lg text-[#1D3557] leading-relaxed font-medium">
+            CadetX brings all three together — students, universities, and companies — into one aligned ecosystem.
+            <br /><br />
+            We prepare students to think, work, and perform like junior data professionals through structured, company‑aligned internships and industry‑ready training.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+)
+
+// Mission & Vision
+const MissionVisionSection = () => (
+  <section className="py-20 bg-[#1D3557] text-white">
+    <div className="container mx-auto px-4">
+      <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+        <div>
+          <h3 className="text-2xl font-bold text-[#E63946] mb-4 flex items-center gap-2">
+            <Target className="w-6 h-6" /> Our Mission
+          </h3>
+          <p className="text-lg text-gray-300 leading-relaxed">
+            To create a talent ecosystem where students gain real experience, companies hire with confidence, and universities strengthen their placement outcomes — all through a single, scalable platform.
+          </p>
+        </div>
+        <div>
+          <h3 className="text-2xl font-bold text-[#E63946] mb-4 flex items-center gap-2">
+            <Rocket className="w-6 h-6" /> Our Vision
+          </h3>
+          <p className="text-lg text-gray-300 leading-relaxed">
+            To create a world where every student graduates with industry‑aligned skills, real experience, and a clear path to employment — supported by a unified ecosystem connecting students, universities, and companies.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+)
+
+// The CadetX Promise
+const PromiseSection = () => (
+  <section className="py-20 bg-white">
+    <div className="container mx-auto px-4">
+      <div className="text-center mb-16">
+        <h2 className="text-3xl md:text-4xl font-bold text-[#1D3557]">The CadetX Promise</h2>
+      </div>
+
+      <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {[
+          { icon: Users, target: 'To Every Student', desc: 'We help you build the skills, confidence, and experience to start your career.' },
+          { icon: GraduationCap, target: 'To Every University', desc: 'We strengthen your placement outcomes and industry reputation.' },
+          { icon: Award, target: 'To Every Company', desc: 'We deliver junior talent that is trained, vetted, and ready to contribute.' }
+        ].map((item, idx) => (
+          <motion.div
+            key={idx}
+            whileHover={{ y: -5 }}
+            className="p-8 bg-white border border-gray-100 rounded-xl shadow-lg hover:shadow-xl transition-all"
+          >
+            <div className="w-14 h-14 rounded-full bg-[#0D4ABC]/10 flex items-center justify-center mb-6 mx-auto">
+              <item.icon className="w-7 h-7 text-[#0D4ABC]" />
+            </div>
+            <h3 className="text-xl font-bold text-[#1D3557] mb-3 text-center">{item.target}</h3>
+            <p className="text-[#457B9D] text-center leading-relaxed">{item.desc}</p>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </section>
+)
+
+// Join Us CTA
+const JoinUsSection = () => (
+  <section className="py-24 bg-gray-50 border-t border-gray-200 text-center">
+    <div className="container mx-auto px-4">
+      <h2 className="text-3xl md:text-4xl font-bold text-[#1D3557] mb-6">Join Us</h2>
+      <p className="text-[#457B9D] mb-10 max-w-2xl mx-auto text-lg">
+        Whether you’re a student looking to start your career, a university aiming to strengthen placements, or a company seeking job‑ready talent — CadetX is building the platform that supports your journey.
+      </p>
+
+      <div className="flex flex-wrap gap-4 justify-center">
+        <Link href="/register?role=student">
+          <Button size="lg" className="bg-[#0D4ABC] hover:bg-[#003399] text-white px-8 h-12 text-lg">
+            For Students <ArrowRight className="ml-2 h-5 w-5" />
+          </Button>
+        </Link>
+        <Link href="/register?role=company">
+          <Button size="lg" variant="outline" className="border-[#0D4ABC] text-[#0D4ABC] hover:bg-[#0D4ABC] hover:text-white px-8 h-12 text-lg">
+            For Companies
+          </Button>
+        </Link>
+        <Link href="/register?role=university">
+          <Button size="lg" variant="outline" className="border-[#0D4ABC] text-[#0D4ABC] hover:bg-[#0D4ABC] hover:text-white px-8 h-12 text-lg">
+            For Universities
+          </Button>
+        </Link>
+      </div>
+    </div>
+  </section>
+)
+
 export default function AboutPage() {
   const values = [
     { icon: Target, title: 'Mission-Driven', desc: 'We exist to democratize access to data careers for everyone.' },
@@ -65,181 +213,11 @@ export default function AboutPage() {
   return (
     <main>
       <Navigation />
-
-      {/* Hero */}
-      <section className="pt-24 pb-16 gradient-hero text-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                About CadetX
-              </h1>
-              <p className="text-xl text-white/90">
-                We're on a mission to train the next generation of data professionals
-                and connect them with companies who value quality talent.
-              </p>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Story */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
-            <div className="prose prose-lg text-gray-600">
-              <p className="mb-4">
-                CadetX was born from a simple observation: there's a massive gap between
-                what colleges teach and what companies need. Thousands of talented individuals
-                struggle to break into data careers, while companies struggle to find quality talent.
-              </p>
-              <p className="mb-4">
-                We decided to bridge this gap by creating an intensive, practical training program
-                that transforms motivated individuals into job-ready data professionals. But we didn't
-                stop there—we also built a talent marketplace that gives our graduates direct access
-                to hiring companies.
-              </p>
-              <p>
-                Today, CadetX has trained over 2,000 data professionals with a 95% placement rate.
-                Our graduates work at leading companies across tech, finance, healthcare, and more.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Mission & Vision */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
-            <div>
-              <h3 className="text-2xl font-bold text-[#0D4ABC] mb-4">Our Mission</h3>
-              <p className="text-lg text-gray-600">
-                To democratize access to data careers by providing world-class training
-                and direct pathways to employment for motivated individuals, regardless
-                of their background.
-              </p>
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold text-[#9C0005] mb-4">Our Vision</h3>
-              <p className="text-lg text-gray-600">
-                A world where talent wins over credentials, where anyone with determination
-                can build a successful career in data, and where companies can hire with
-                complete confidence.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Values */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Our Values</h2>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            {values.map((value, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-              >
-                <Card className="h-full text-center hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="w-14 h-14 rounded-xl bg-blue-100 flex items-center justify-center mx-auto mb-4">
-                      <value.icon className="w-7 h-7 text-[#0D4ABC]" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{value.title}</h3>
-                    <p className="text-gray-600 text-sm">{value.desc}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Team */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900">Leadership Team</h2>
-          </div>
-          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {team.map((member, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-              >
-                <Card className="text-center overflow-hidden">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-48 object-cover"
-                  />
-                  <CardContent className="p-4">
-                    <h3 className="font-semibold text-gray-900">{member.name}</h3>
-                    <p className="text-sm text-gray-600">{member.role}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="py-20 gradient-primary text-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { value: '2000+', label: 'Graduates' },
-              { value: '500+', label: 'Hiring Partners' },
-              { value: '95%', label: 'Placement Rate' },
-              { value: '4.9★', label: 'Avg. Rating' },
-            ].map((stat, idx) => (
-              <div key={idx}>
-                <div className="text-4xl font-bold">{stat.value}</div>
-                <div className="text-white/80">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Join the CadetX Community</h2>
-          <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-            Whether you're looking to start your data career or hire great talent,
-            we'd love to have you.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register?role=student">
-              <Button size="lg" className="bg-[#0D4ABC]">
-                Join as Student <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="/register?role=company">
-              <Button size="lg" variant="outline">
-                Join as Company <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-
+      <HeroSection />
+      <StorySection />
+      <MissionVisionSection />
+      <PromiseSection />
+      <JoinUsSection />
       <Footer />
     </main>
   )

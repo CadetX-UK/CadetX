@@ -48,6 +48,233 @@ const Footer = () => (
   </footer>
 )
 
+// Hero Section
+const HeroSection = () => (
+  <section className="pt-24 pb-16 bg-[#0D4ABC] text-white">
+    <div className="container mx-auto px-4">
+      <div className="max-w-4xl mx-auto text-center">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <span className="inline-block px-4 py-2 bg-white/10 rounded-full text-sm font-medium mb-6">
+            🎓 For Aspiring Data Professionals
+          </span>
+          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+            Become a Job‑Ready Data Professional — Through Company‑Aligned Internships
+          </h1>
+          <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
+            CadetX trains you with hands‑on, partner‑sourced project work so you build the skills, portfolio, and confidence to launch your data career.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/register?role=student">
+              <Button size="lg" className="bg-white text-[#0D4ABC] hover:bg-gray-100 px-8 h-12 text-lg font-semibold">
+                Apply for the Internship Program <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </motion.div>
+      </div>
+    </div>
+  </section>
+)
+
+// Why Students Choose CadetX
+const WhyChooseSection = () => (
+  <section className="py-20 bg-gray-50">
+    <div className="container mx-auto px-4">
+      <div className="text-center mb-16">
+        <h2 className="text-3xl md:text-4xl font-bold text-[#1D3557] mb-4">Why Students Choose CadetX</h2>
+        <p className="text-[#457B9D] text-lg font-medium">
+          We don’t teach you tools. We prepare you for the workplace.
+        </p>
+      </div>
+
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {[
+          { icon: Target, title: 'Real Project Work', desc: 'Work on partner‑sourced project tasks that mirror industry requirements.' },
+          { icon: Users, title: 'Professional Workflows', desc: 'Learn GitHub, Teams, Outlook, Scrum, and professional collaborative workflows.' },
+          { icon: Award, title: 'Trusted Portfolio', desc: 'Build a portfolio of real work that employers can trust and verify.' },
+          { icon: Users, title: 'Weekly Feedback', desc: 'Get weekly feedback from managers and mentors to improve your work.' },
+          { icon: Zap, title: 'Thinking-First', desc: 'Strengthen your thinking, problem‑solving, and analytical ability.' },
+          { icon: CheckCircle, title: 'Hire-Ready', desc: 'Become hire‑ready, not just “course‑completed”.' },
+        ].map((item, idx) => (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: idx * 0.1 }}
+          >
+            <Card className="h-full hover:shadow-lg transition-shadow border-0 shadow-md">
+              <CardContent className="p-8">
+                <div className="w-12 h-12 rounded-xl bg-[#0D4ABC]/10 flex items-center justify-center mb-6">
+                  <item.icon className="w-6 h-6 text-[#0D4ABC]" />
+                </div>
+                <h3 className="text-xl font-bold text-[#1D3557] mb-3">{item.title}</h3>
+                <p className="text-[#457B9D] leading-relaxed">{item.desc}</p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </section>
+)
+
+// Placement Support
+const PlacementSupport = () => (
+  <section className="py-20 bg-white">
+    <div className="container mx-auto px-4">
+      <div className="grid md:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+        <div>
+          <h2 className="text-3xl md:text-4xl font-bold text-[#1D3557] mb-6">Placement Support</h2>
+          <p className="text-lg text-[#457B9D] mb-6 leading-relaxed">
+            When you finish your training and internship, you won’t be standing alone wondering what to do next.
+            CadetX stays with you until you’re ready for the next step.
+          </p>
+          <ul className="space-y-4 mb-8">
+            {[
+              'We help you find the right opportunities',
+              'Guide you through applications and interviews',
+              'Connect you to companies looking for talent like you'
+            ].map((item, idx) => (
+              <li key={idx} className="flex items-start gap-3">
+                <CheckCircle className="w-6 h-6 text-[#0D4ABC] shrink-0 mt-0.5" />
+                <span className="text-[#1D3557] font-medium">{item}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="text-xl font-bold text-[#0D4ABC]">
+            Our goal is simple: to see you grow, get noticed, and step into a job you’re proud of.
+            <br />
+            <span className="text-[#1D3557] text-lg font-normal mt-2 block">You put in the work — we help you reach the finish line.</span>
+          </p>
+        </div>
+        <div className="bg-[#f8f9fa] p-8 rounded-2xl border border-gray-100 flex items-center justify-center">
+          <img src="https://images.pexels.com/photos/5668858/pexels-photo-5668858.jpeg" alt="Placement Support" className="rounded-xl shadow-lg" />
+        </div>
+      </div>
+    </div>
+  </section>
+)
+
+// What You Will Learn
+const LearningOutcomes = () => (
+  <section className="py-20 bg-[#1D3557] text-white">
+    <div className="container mx-auto px-4">
+      <div className="text-center mb-16">
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">What You Will Learn</h2>
+        <p className="text-gray-300">More than just code.</p>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+        {[
+          {
+            title: '1. Technical Skills',
+            desc: 'A solid, end‑to‑end data foundation that prepares you for analytics, engineering, science, and AI roles.'
+          },
+          {
+            title: '2. Analytical & Problem‑Solving Ability',
+            desc: 'Structured reasoning, critical thinking, and the ability to break down complex problems and make informed decisions using data.'
+          },
+          {
+            title: '3. Professional Workplace Behaviour',
+            desc: 'Clear communication, documentation discipline, collaboration, meeting etiquette, and consistent delivery within deadlines.'
+          },
+          {
+            title: '4. Career Readiness & Industry Alignment',
+            desc: 'You’ll learn how to present your work professionally, build a credible portfolio, communicate with hiring teams, and position yourself confidently.'
+          }
+        ].map((item, idx) => (
+          <div key={idx} className="bg-white/10 p-8 rounded-xl backdrop-blur-sm border border-white/10">
+            <h3 className="text-xl font-bold mb-4 text-[#E63946]">{item.title}</h3>
+            <p className="text-gray-200 leading-relaxed">{item.desc}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)
+
+// Outcome & Eligibility
+const OutcomeAndEligibility = () => (
+  <section className="py-20 bg-white">
+    <div className="container mx-auto px-4">
+      <div className="grid md:grid-cols-2 gap-16 max-w-6xl mx-auto">
+        {/* Outcome */}
+        <div>
+          <h3 className="text-2xl font-bold text-[#1D3557] mb-6 flex items-center gap-3">
+            <Award className="w-8 h-8 text-[#0D4ABC]" />
+            What You Get at the End
+          </h3>
+          <Card className="bg-gray-50 border-gray-100">
+            <CardContent className="p-6">
+              <ul className="space-y-4">
+                {[
+                  'A portfolio employers can trust',
+                  'A GitHub profile with structured workflows',
+                  'A case‑study‑based resume',
+                  'Experience working like a junior data professional',
+                  'Eligibility for CadetX hiring opportunities'
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-green-600" />
+                    <span className="text-gray-700 font-medium">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Eligibility */}
+        <div>
+          <h3 className="text-2xl font-bold text-[#1D3557] mb-6 flex items-center gap-3">
+            <Users className="w-8 h-8 text-[#E63946]" />
+            Who Should Apply
+          </h3>
+          <Card className="bg-gray-50 border-gray-100 h-full">
+            <CardContent className="p-6 h-full flex flex-col justify-center">
+              <ul className="space-y-4 mb-6">
+                {[
+                  'Students in their final year',
+                  'Fresh graduates',
+                  'Career switchers',
+                  'Anyone serious about starting a data career'
+                ].map((item, idx) => (
+                  <li key={idx} className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-[#1D3557]" />
+                    <span className="text-gray-700 font-medium">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="text-[#0D4ABC] font-semibold italic mt-auto">
+                No prior experience required — just commitment and willingness to learn.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  </section>
+)
+
+// Final CTA
+const FinalCTA = () => (
+  <section className="py-24 bg-gray-50 border-t border-gray-200 text-center">
+    <div className="container mx-auto px-4">
+      <h2 className="text-3xl md:text-4xl font-bold text-[#1D3557] mb-8">Ready to start your data career?</h2>
+      <Link href="/register?role=student">
+        <Button size="lg" className="bg-[#0D4ABC] hover:bg-[#003399] text-white px-12 h-16 text-xl font-bold rounded-full shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+          Apply for the Internship Program
+          <ArrowRight className="ml-2 h-6 w-6" />
+        </Button>
+      </Link>
+    </div>
+  </section>
+)
+
 export default function StudentsPage() {
   const benefits = [
     { icon: BookOpen, title: 'Structured Curriculum', desc: 'Week-by-week learning path covering SQL, Python, Tableau & more' },
@@ -70,180 +297,12 @@ export default function StudentsPage() {
   return (
     <main>
       <Navigation />
-
-      {/* Hero */}
-      <section className="pt-24 pb-16 gradient-hero text-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-            >
-              <span className="inline-block px-4 py-2 bg-white/10 rounded-full text-sm font-medium mb-6">
-                🎓 For Aspiring Data Professionals
-              </span>
-              <h1 className="text-4xl md:text-5xl font-bold mb-6">
-                Launch Your Data Career in 12 Weeks
-              </h1>
-              <p className="text-xl text-white/90 mb-8">
-                Intensive, hands-on training that transforms beginners into job-ready data analysts.
-                No prior experience required.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/register?role=student">
-                  <Button size="lg" className="bg-white text-[#0D4ABC] hover:bg-gray-100">
-                    Apply Now <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <Link href="/how-it-works">
-                  <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
-                    <Play className="mr-2 h-5 w-5" /> See How It Works
-                  </Button>
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Stats */}
-      <section className="py-12 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { value: '2000+', label: 'Graduates' },
-              { value: '95%', label: 'Placement Rate' },
-              { value: '₹6.5L', label: 'Avg. Starting Salary' },
-              { value: '500+', label: 'Hiring Partners' },
-            ].map((stat, idx) => (
-              <div key={idx}>
-                <div className="text-3xl md:text-4xl font-bold text-[#0D4ABC]">{stat.value}</div>
-                <div className="text-gray-600">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Benefits */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">Why Choose CadetX?</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              We don't just teach skills—we prepare you for real jobs.
-            </p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {benefits.map((benefit, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: idx * 0.1 }}
-              >
-                <Card className="h-full hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center mb-4">
-                      <benefit.icon className="w-6 h-6 text-[#0D4ABC]" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{benefit.title}</h3>
-                    <p className="text-gray-600">{benefit.desc}</p>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Curriculum */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">12-Week Curriculum</h2>
-            <p className="text-gray-600">A comprehensive journey from basics to job-ready</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {curriculum.map((module, idx) => (
-              <Card key={idx} className="border-l-4 border-l-[#0D4ABC]">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-3 mb-3">
-                    <span className="text-sm font-medium text-[#0D4ABC] bg-blue-50 px-2 py-1 rounded">
-                      Week {module.week}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3">{module.title}</h3>
-                  <ul className="space-y-2">
-                    {module.topics.map((topic, i) => (
-                      <li key={i} className="flex items-center gap-2 text-sm text-gray-600">
-                        <CheckCircle className="w-4 h-4 text-green-500" /> {topic}
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-lg mx-auto">
-            <Card className="border-2 border-[#0D4ABC] shadow-xl">
-              <CardContent className="p-8 text-center">
-                <div className="inline-block px-3 py-1 bg-[#0D4ABC] text-white text-sm font-medium rounded-full mb-4">
-                  Most Popular
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">Data Analytics Program</h3>
-                <p className="text-gray-600 mb-6">Complete 12-week intensive training</p>
-                <div className="mb-6">
-                  <span className="text-5xl font-bold text-gray-900">₹9,999</span>
-                  <span className="text-gray-500 ml-2">one-time</span>
-                </div>
-                <ul className="text-left space-y-3 mb-8">
-                  {[
-                    'Full curriculum access',
-                    'Live mentor sessions',
-                    'Real project portfolio',
-                    'Certification',
-                    'Placement assistance',
-                    'Lifetime community access'
-                  ].map((item, idx) => (
-                    <li key={idx} className="flex items-center gap-2 text-gray-700">
-                      <CheckCircle className="w-5 h-5 text-green-500" /> {item}
-                    </li>
-                  ))}
-                </ul>
-                <Link href="/register?role=student">
-                  <Button size="lg" className="w-full bg-[#0D4ABC]">
-                    Start Your Journey <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
-      <section className="py-20 gradient-primary text-white">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Ready to Transform Your Career?</h2>
-          <p className="text-white/90 mb-8 max-w-2xl mx-auto">
-            Join thousands of successful graduates who have launched their data careers with CadetX.
-          </p>
-          <Link href="/register?role=student">
-            <Button size="lg" className="bg-white text-[#0D4ABC] hover:bg-gray-100">
-              Apply Now — Limited Seats <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-          </Link>
-        </div>
-      </section>
-
+      <HeroSection />
+      <WhyChooseSection />
+      <PlacementSupport />
+      <LearningOutcomes />
+      <OutcomeAndEligibility />
+      <FinalCTA />
       <Footer />
     </main>
   )
